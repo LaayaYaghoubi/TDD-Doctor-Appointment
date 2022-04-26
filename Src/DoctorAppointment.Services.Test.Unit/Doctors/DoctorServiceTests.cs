@@ -47,6 +47,24 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
             expected.LastName.Should().Be(doctor.LastName);
             expected.NationalCode.Should().Be(doctor.NationalCode);
             expected.Field.Should().Be(doctor.Field);
+        }
+        [Fact]
+        public void Update_updates_doctor_properly()
+        {
+            var doctor = new DoctorBuilder().CreateDoctor();
+            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
+            var updatedDoctor = new DoctorBuilder().WithFistName("gholi").CreateDoctor();
+            _dataContext.Manipulate(_ => _.Doctors.Add(updatedDoctor));
+
+            _sut.Update(doctor.Id, updatedDoctor);
+
+            var expected = _dataContext.Doctors.FirstOrDefault(_ => _.Id == updatedDoctor.Id);
+            expected.FirstName.Should().Be(updatedDoctor.FirstName);
+            expected.LastName.Should().Be(updatedDoctor.LastName);
+            expected.NationalCode.Should().Be(updatedDoctor.NationalCode);
+            expected.Field.Should().Be(updatedDoctor.Field);
+            
+
 
         }
 

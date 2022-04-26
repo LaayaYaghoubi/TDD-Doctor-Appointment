@@ -22,6 +22,21 @@ namespace DoctorAppointment.Services.Doctors
             _unitOfWork = unitOfWork;
         }
 
-      
+        public void Add(Doctor doctor)
+        {
+            _repository.Add(doctor);
+        }
+
+        public void Update(int id, Doctor updatedDoctor)
+        {
+            var doctor = _repository.FindById(id);
+            if (doctor == null)
+            {
+                throw new DoctorWithThisIdDoesNotExistException();
+            }
+            _repository.Update(doctor);
+            _unitOfWork.Commit();
+
+        }
     }
-}
+} 

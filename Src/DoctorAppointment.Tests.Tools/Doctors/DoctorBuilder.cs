@@ -22,23 +22,27 @@ namespace DoctorAppointment.Tests.Tools.Doctors
             };
         }
 
-        public void WithFistName(string FistName)
+        public DoctorBuilder WithFistName(string FistName)
         {
             doctor.FirstName = FistName;
+            return this;
         }
 
-        public void WithLastName(string Lastname)
+        public DoctorBuilder WithLastName(string Lastname)
         {
             doctor.LastName = Lastname;
+            return this;
         }
 
-       public void  WithNationalCode(string nationalcode)
+       public DoctorBuilder WithNationalCode(string nationalcode)
         {
             doctor.NationalCode = nationalcode;
+            return this; 
         }
-        public void WithField(string field)
+        public DoctorBuilder WithField(string field)
         {
             doctor.Field = field;
+            return this;
         }
         public Doctor CreateDoctor()
         {

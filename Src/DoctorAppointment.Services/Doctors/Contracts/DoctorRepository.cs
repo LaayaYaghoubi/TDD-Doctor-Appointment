@@ -1,4 +1,5 @@
-﻿using DoctorAppointment.Infrastructure.Application;
+﻿using DoctorAppointment.Entities.Doctors;
+using DoctorAppointment.Infrastructure.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,8 @@ namespace DoctorAppointment.Services.Doctors.Contracts
 {
     public interface DoctorRepository : Repository
     {
+        void Add(Doctor doctor);
+        Doctor FindById(int id);
+        void Update(Doctor doctor);
     }
 }

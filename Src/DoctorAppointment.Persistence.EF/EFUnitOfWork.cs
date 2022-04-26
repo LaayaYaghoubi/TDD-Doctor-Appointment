@@ -18,7 +18,7 @@ namespace DoctorAppointment.Persistence.EF
 
         public void Commit()
         {
-            throw new NotImplementedException();
+            _dataContext.SaveChanges();
         }
     }
 }

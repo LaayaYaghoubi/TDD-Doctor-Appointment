@@ -30,6 +30,7 @@
     <ProjectReference Include="..\DoctorAppointment.Infrastructure\DoctorAppointment.Infrastructure.csproj" />
     <ProjectReference Include="..\DoctorAppointment.Persistence.EF\DoctorAppointment.Persistence.EF.csproj" />
     <ProjectReference Include="..\DoctorAppointment.Services\DoctorAppointment.Services.csproj" />
+    <ProjectReference Include="..\DoctorAppointment.Tests.Tools\DoctorAppointment.Tests.Tools.csproj" />
   </ItemGroup>
 
 </Project>
