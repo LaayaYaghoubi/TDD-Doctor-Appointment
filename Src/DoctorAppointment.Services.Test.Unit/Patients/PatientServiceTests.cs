@@ -76,17 +76,16 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
 
             expected.Should().ThrowExactly<PatientWithThisIdDoesNotExistException>();
         }
+        [Fact]
+        public void Delete_deletes_patient_properly()
+        {
+            var patient = new PatientBuilder().CreatePatient();
+            _dataContext.Manipulate(_ => _.Patients.Add(patient));
 
-        //[Fact]
-        //public void Delete_deletes_doctor_properly()
-        //{
-        //    var doctor = new DoctorBuilder().CreateDoctor();
-        //    _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
+            _sut.Delete(patient.Id);
 
-        //    _sut.Delete(doctor.Id);
-
-        //    _dataContext.Doctors.Should().NotContain(doctor);
-        //}
+            _dataContext.Patients.Should().NotContain(patient);
+        }
         //[Fact]
         //public void Delete_throws_DoctorWithThisIdDoesNotExistException_if_doctor_doesnot_exist()
         //{

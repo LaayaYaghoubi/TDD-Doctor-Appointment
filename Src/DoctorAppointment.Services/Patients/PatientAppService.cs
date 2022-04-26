@@ -25,6 +25,18 @@ namespace DoctorAppointment.Services.Patients
         public void Add(Patient patient)
         {
             _repository.Add(patient);
+            _unitOfWork.Commit();   
+        }
+
+        public void Delete(int id)
+        {
+            var patient = _repository.FindById(id);
+            if (patient == null)
+            {
+                throw new PatientWithThisIdDoesNotExistException();
+            }
+            _repository.Delete(patient);
+            _unitOfWork.Commit();
         }
 
         public void Update(int id, Patient updatedPatient)
@@ -35,6 +47,7 @@ namespace DoctorAppointment.Services.Patients
                 throw new PatientWithThisIdDoesNotExistException();
             }
             _repository.Update(patient);
+            _unitOfWork.Commit();
         }
     }
 }
