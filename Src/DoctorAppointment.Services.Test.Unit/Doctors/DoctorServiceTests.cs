@@ -63,10 +63,43 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
             expected.LastName.Should().Be(updatedDoctor.LastName);
             expected.NationalCode.Should().Be(updatedDoctor.NationalCode);
             expected.Field.Should().Be(updatedDoctor.Field);
-            
-
-
         }
+        [Fact]
+        public void Delete_deletes_doctor_properly()
+        {
+            var doctor = new DoctorBuilder().CreateDoctor();
+            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
 
+            _sut.Delete(doctor.Id);
+
+            _dataContext.Doctors.Should().NotContain(doctor); 
+        }
+        [Fact]
+        public void GetAll_returns_all_doctors_properly()
+        {
+            var doctors = new List<Doctor>()
+           {
+               new DoctorBuilder().CreateDoctor(),
+               new DoctorBuilder().WithFistName("ali")
+               .WithLastName("moghimi")
+               .WithNationalCode("23456")
+               .WithField("gosh").CreateDoctor()
+
+        };
+            _dataContext.Manipulate(_ => _.Doctors.AddRange(doctors));
+
+            var expected = _sut.GetAll();
+
+            expected.Should().HaveCount(2);
+            expected.Should().Contain(_ => _.FirstName == doctors[0].FirstName);
+            expected.Should().Contain(_ => _.LastName == doctors[0].LastName);
+            expected.Should().Contain(_ => _.Field == doctors[0].Field);
+            expected.Should().Contain(_ => _.NationalCode == doctors[0].NationalCode);
+            expected.Should().Contain(_ => _.FirstName == doctors[1].FirstName);
+            expected.Should().Contain(_ => _.LastName == doctors[1].LastName);
+            expected.Should().Contain(_ => _.NationalCode == doctors[1].NationalCode);
+            expected.Should().Contain(_ => _.Field == doctors[1].Field);
+            
+        }
     }
 }

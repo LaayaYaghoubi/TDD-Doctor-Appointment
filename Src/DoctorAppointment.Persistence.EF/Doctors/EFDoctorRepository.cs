@@ -22,9 +22,26 @@ namespace DoctorAppointment.Persistence.EF.Doctors
             _dataContext.Doctors.Add(doctor);
         }
 
+        public void Delete(Doctor doctor)
+        {
+            _dataContext.Doctors.Remove(doctor);
+        }
+
         public Doctor FindById(int id)
         {
             return _dataContext.Doctors.Find(id);
+        }
+
+        public List<Doctor> GetAll()
+        {
+            return _dataContext.Doctors.Select(_ => new Doctor
+            {
+                FirstName = _.FirstName,
+                LastName = _.LastName,
+                NationalCode = _.NationalCode,
+                Field = _.Field,
+            }).ToList();
+
         }
 
         public void Update(Doctor doctor)
