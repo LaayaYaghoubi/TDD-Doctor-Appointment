@@ -1,4 +1,5 @@
 ﻿using BookStore.Infrastructure.Test;
+using DoctorAppointment.Entities.Patients;
 using DoctorAppointment.Infrastructure.Application;
 using DoctorAppointment.Persistence.EF;
 using DoctorAppointment.Persistence.EF.Patients;
@@ -98,32 +99,28 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
             expected.Should().ThrowExactly<PatientWithThisIdDoesNotExistException>();
 
         }
-        //[Fact]
-        //public void GetAll_returns_all_doctors_properly()
-        //{
-        //    var doctors = new List<Doctor>()
-        //   {
-        //       new DoctorBuilder().CreateDoctor(),
-        //       new DoctorBuilder().WithFistName("ali")
-        //       .WithLastName("moghimi")
-        //       .WithNationalCode("23456")
-        //       .WithField("gosh").CreateDoctor()
+        [Fact]
+        public void GetAll_returns_all_patients_properly()
+        {
+            var patients = new List<Patient>()
+           {
+               new PatientBuilder().CreatePatient(),
+               new PatientBuilder().WithFirstName("ali")
+               .WithLastName("moghimi")
+               .WithNationalCode("23456")
+               .CreatePatient()
+        };
+            _dataContext.Manipulate(_ => _.Patients.AddRange(patients));
 
-        //};
-        //    _dataContext.Manipulate(_ => _.Doctors.AddRange(doctors));
+            var expected = _sut.GetAll();
 
-        //    var expected = _sut.GetAll();
-
-        //    expected.Should().HaveCount(2);
-        //    expected.Should().Contain(_ => _.FirstName == doctors[0].FirstName);
-        //    expected.Should().Contain(_ => _.LastName == doctors[0].LastName);
-        //    expected.Should().Contain(_ => _.Field == doctors[0].Field);
-        //    expected.Should().Contain(_ => _.NationalCode == doctors[0].NationalCode);
-        //    expected.Should().Contain(_ => _.FirstName == doctors[1].FirstName);
-        //    expected.Should().Contain(_ => _.LastName == doctors[1].LastName);
-        //    expected.Should().Contain(_ => _.NationalCode == doctors[1].NationalCode);
-        //    expected.Should().Contain(_ => _.Field == doctors[1].Field);
-
-        //}
+            expected.Should().HaveCount(2);
+            expected.Should().Contain(_ => _.FirstName == patients[0].FirstName);
+            expected.Should().Contain(_ => _.LastName == patients[0].LastName);
+            expected.Should().Contain(_ => _.NationalCode == patients[0].NationalCode);
+            expected.Should().Contain(_ => _.FirstName == patients[1].FirstName);
+            expected.Should().Contain(_ => _.LastName == patients[1].LastName);
+            expected.Should().Contain(_ => _.NationalCode == patients[1].NationalCode);
+        }
     }
 }
