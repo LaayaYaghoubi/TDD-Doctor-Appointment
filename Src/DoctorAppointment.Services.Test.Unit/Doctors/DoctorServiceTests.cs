@@ -65,6 +65,22 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
             expected.Field.Should().Be(updatedDoctor.Field);
         }
         [Fact]
+        public void Update_throws_DoctorWithThisIdDoesNotExistException_if_doctor_doesnot_exist()
+        {
+            int FakeId = 987;
+            var doctor = new DoctorBuilder().CreateDoctor();
+            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
+            var updatedDoctor = new DoctorBuilder().WithFistName("gholi").CreateDoctor();
+            _dataContext.Manipulate(_ => _.Doctors.Add(updatedDoctor));
+
+           Action expected =()=> _sut.Update(FakeId, updatedDoctor);
+
+            expected.Should().ThrowExactly<DoctorWithThisIdDoesNotExistException>();
+
+
+        }
+
+        [Fact]
         public void Delete_deletes_doctor_properly()
         {
             var doctor = new DoctorBuilder().CreateDoctor();
@@ -83,9 +99,8 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
 
            Action expected =()=> _sut.Delete(FakeId);
 
-            expected.Should().ThrowExactly<DoctorWithThisIdDoesNotExistException>();
-
-            
+           expected.Should().ThrowExactly<DoctorWithThisIdDoesNotExistException>();
+  
         }
         [Fact]
         public void GetAll_returns_all_doctors_properly()
