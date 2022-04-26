@@ -75,6 +75,19 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
             _dataContext.Doctors.Should().NotContain(doctor); 
         }
         [Fact]
+        public void Delete_throws_DoctorWithThisIdDoesNotExistException_if_doctor_doesnot_exist()
+        {
+            int FakeId = 134;
+            var doctor = new DoctorBuilder().CreateDoctor();
+            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
+
+           Action expected =()=> _sut.Delete(FakeId);
+
+            expected.Should().ThrowExactly<DoctorWithThisIdDoesNotExistException>();
+
+            
+        }
+        [Fact]
         public void GetAll_returns_all_doctors_properly()
         {
             var doctors = new List<Doctor>()

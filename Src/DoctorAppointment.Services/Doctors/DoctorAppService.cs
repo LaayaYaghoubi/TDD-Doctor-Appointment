@@ -27,6 +27,24 @@ namespace DoctorAppointment.Services.Doctors
             _repository.Add(doctor);
         }
 
+        public void Delete(int id)
+        {
+            var doctor = _repository.FindById(id);
+
+            if(doctor == null)
+            {
+                throw new DoctorWithThisIdDoesNotExistException();
+            }
+            _repository.Delete(doctor);
+            _unitOfWork.Commit();
+
+        }
+
+        public List<Doctor> GetAll()
+        {
+            return _repository.GetAll();
+        }
+
         public void Update(int id, Doctor updatedDoctor)
         {
             var doctor = _repository.FindById(id);

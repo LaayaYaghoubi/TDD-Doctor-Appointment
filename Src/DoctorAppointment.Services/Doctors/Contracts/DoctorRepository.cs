@@ -13,5 +13,7 @@ namespace DoctorAppointment.Services.Doctors.Contracts
         void Add(Doctor doctor);
         Doctor FindById(int id);
         void Update(Doctor doctor);
+        void Delete(Doctor doctor);
+        List<Doctor> GetAll();
     }
 }
