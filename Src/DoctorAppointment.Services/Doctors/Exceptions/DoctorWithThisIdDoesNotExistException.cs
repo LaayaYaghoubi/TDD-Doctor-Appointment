@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace DoctorAppointment.Services.Doctors
 {
     [Serializable]
-    internal class DoctorWithThisIdDoesNotExistException : Exception
+    public class DoctorWithThisIdDoesNotExistException : Exception
     {
        
     }

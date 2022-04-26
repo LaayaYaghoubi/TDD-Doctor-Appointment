@@ -30,7 +30,11 @@ namespace DoctorAppointment.Services.Patients
         public void Update(int id, Patient updatedPatient)
         {
             var patient = _repository.FindById(id);
-
+            if (patient == null)
+            {
+                throw new PatientWithThisIdDoesNotExistException();
+            }
+            _repository.Update(patient);
         }
     }
 }
