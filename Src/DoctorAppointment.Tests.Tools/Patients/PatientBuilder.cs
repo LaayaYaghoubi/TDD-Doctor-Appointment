@@ -35,6 +35,13 @@ namespace DoctorAppointment.Tests.Tools.Patients
             patient.NationalCode = nationalCode;
             return this;
             }
+        public Patient CreatePatient()
+        {
+            return patient;
+        }
+
+
+        
     }
     }
 
