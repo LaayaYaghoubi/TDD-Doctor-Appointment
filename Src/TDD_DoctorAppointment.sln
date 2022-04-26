@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAppointment.Entities", "DoctorAppointment.Entities\DoctorAppointment.Entities.csproj", "{9A433E45-591B-4ACA-B7CE-3C00022A6AD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoctorAppointment.Entities", "DoctorAppointment.Entities\DoctorAppointment.Entities.csproj", "{9A433E45-591B-4ACA-B7CE-3C00022A6AD7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{76B67215-9459-4281-B109-57C4B8B5E4DE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D7A76C62-3339-465E-8935-E59E96A52A44}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAppointment.Infrastructure", "DoctorAppointment.Infrastructure\DoctorAppointment.Infrastructure.csproj", "{54C008D6-8308-41C8-989C-0EFFCE8CA6B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAppointment.Migrations", "DoctorAppointment.Migrations\DoctorAppointment.Migrations.csproj", "{EB42A30B-7C82-467F-AA15-78CAF8224532}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,12 +23,22 @@ Global
 		{9A433E45-591B-4ACA-B7CE-3C00022A6AD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A433E45-591B-4ACA-B7CE-3C00022A6AD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A433E45-591B-4ACA-B7CE-3C00022A6AD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54C008D6-8308-41C8-989C-0EFFCE8CA6B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54C008D6-8308-41C8-989C-0EFFCE8CA6B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54C008D6-8308-41C8-989C-0EFFCE8CA6B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54C008D6-8308-41C8-989C-0EFFCE8CA6B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB42A30B-7C82-467F-AA15-78CAF8224532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB42A30B-7C82-467F-AA15-78CAF8224532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB42A30B-7C82-467F-AA15-78CAF8224532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB42A30B-7C82-467F-AA15-78CAF8224532}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9A433E45-591B-4ACA-B7CE-3C00022A6AD7} = {76B67215-9459-4281-B109-57C4B8B5E4DE}
+		{54C008D6-8308-41C8-989C-0EFFCE8CA6B1} = {76B67215-9459-4281-B109-57C4B8B5E4DE}
+		{EB42A30B-7C82-467F-AA15-78CAF8224532} = {76B67215-9459-4281-B109-57C4B8B5E4DE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A485D70B-6188-4DE7-8E5F-5E48F7BBAB54}
