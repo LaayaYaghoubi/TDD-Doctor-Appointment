@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using DoctorAppointment.Entities;
 using DoctorAppointment.Entities.Appointments;
 
 namespace DoctorAppointment.Persistence.EF.Appointments
