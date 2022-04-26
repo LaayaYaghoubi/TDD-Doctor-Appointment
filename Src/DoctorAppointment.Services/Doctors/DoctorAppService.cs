@@ -25,6 +25,7 @@ namespace DoctorAppointment.Services.Doctors
         public void Add(Doctor doctor)
         {
             _repository.Add(doctor);
+            _unitOfWork.Commit();   
         }
 
         public void Delete(int id)

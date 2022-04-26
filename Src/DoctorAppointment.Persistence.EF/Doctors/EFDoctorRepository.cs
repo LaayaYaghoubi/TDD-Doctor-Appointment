@@ -44,6 +44,11 @@ namespace DoctorAppointment.Persistence.EF.Doctors
 
         }
 
+        public bool IsDoctorExist(int id)
+        {
+            return _dataContext.Doctors.Any(x => x.Id == id);   
+        }
+
         public void Update(Doctor doctor)
         {
             _dataContext.Doctors.Update(doctor);

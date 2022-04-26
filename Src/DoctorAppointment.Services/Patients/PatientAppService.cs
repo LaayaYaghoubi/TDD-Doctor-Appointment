@@ -25,7 +25,7 @@ namespace DoctorAppointment.Services.Patients
         public void Add(Patient patient)
         {
             _repository.Add(patient);
-            _unitOfWork.Commit();   
+            _unitOfWork.Commit();
         }
 
         public void Delete(int id)
@@ -37,6 +37,11 @@ namespace DoctorAppointment.Services.Patients
             }
             _repository.Delete(patient);
             _unitOfWork.Commit();
+        }
+
+        public List<Patient> GetAll()
+        {
+            return _repository.GetAll();
         }
 
         public void Update(int id, Patient updatedPatient)

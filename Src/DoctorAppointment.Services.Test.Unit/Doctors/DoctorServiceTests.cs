@@ -38,8 +38,7 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
         public void Add_adds_doctor_properly()
         {
             var doctor = new DoctorBuilder().CreateDoctor();
-            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
-
+          
             _sut.Add(doctor);
 
             var expected = _dataContext.Doctors.FirstOrDefault();

@@ -38,17 +38,16 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
         public void Add_adds_patient_properly()
         {
             var patient = new PatientBuilder().CreatePatient();
-            _dataContext.Manipulate(_ => _.Patients.Add(patient));
-
+          
             _sut.Add(patient);
 
             var expected = _dataContext.Patients.FirstOrDefault();
             expected.FirstName.Should().Be(patient.FirstName);
             expected.LastName.Should().Be(patient.LastName);
             expected.NationalCode.Should().Be(patient.NationalCode);
-            
-        }
-        [Fact]
+
+          }
+            [Fact]
         public void Update_updates_patient_properly()
         {
             var patient = new PatientBuilder().CreatePatient();
