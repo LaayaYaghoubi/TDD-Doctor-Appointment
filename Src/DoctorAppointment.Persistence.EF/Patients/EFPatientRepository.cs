@@ -21,5 +21,15 @@ namespace DoctorAppointment.Persistence.EF.Patients
         {
            _dataContext.Patients.Add(patient);  
         }
+
+        public Patient FindById(int id)
+        {
+            return _dataContext.Patients.Find(id);
+        }
+
+        public void Update(Patient patient)
+        {
+            _dataContext.Patients.Update(patient);
+        }
     }
 }
