@@ -1,5 +1,8 @@
 using Autofac;
+using DoctorAppointment.Infrastructure.Application;
 using DoctorAppointment.Persistence.EF;
+using DoctorAppointment.Persistence.EF.Doctors;
+using DoctorAppointment.Services.Doctors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -36,19 +39,19 @@ namespace BookStore.RestAPI
                  .AsSelf()
                  .InstancePerLifetimeScope();
 
-            //builder.RegisterAssemblyTypes(typeof(EFCategoryRepository).Assembly)
-            //          .AssignableTo<Repository>()
-            //          .AsImplementedInterfaces()
-            //          .InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(typeof(EFDoctorRepository).Assembly)
+                      .AssignableTo<Repository>()
+                      .AsImplementedInterfaces()
+                      .InstancePerLifetimeScope();
 
-            //builder.RegisterAssemblyTypes(typeof(CategoryAppService).Assembly)
-            //          .AssignableTo<Service>()
-            //          .AsImplementedInterfaces()
-            //          .InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(typeof(DoctorAppService).Assembly)
+                      .AssignableTo<Service>()
+                      .AsImplementedInterfaces()
+                      .InstancePerLifetimeScope();
 
-            //builder.RegisterType<EFUnitOfWork>()
-            //    .As<UnitOfWork>()
-            //    .InstancePerLifetimeScope();
+            builder.RegisterType<EFUnitOfWork>()
+                .As<UnitOfWork>()
+                .InstancePerLifetimeScope();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

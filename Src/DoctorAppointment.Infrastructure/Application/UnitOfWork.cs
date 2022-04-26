@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace DoctorAppointment.Infrastructure.Application
 {
-    internal class UnitOfWork
+    public interface UnitOfWork
     {
+        void Commit();
     }
 }

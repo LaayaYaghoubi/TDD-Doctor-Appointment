@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoctorAppointment.Infrastructure.Application
+namespace DoctorAppointment.Persistence.EF.Appointments
 {
-    public interface Repository
+    public class EFAppointmentRepository
     {
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DoctorAppointment.Infrastructure.Application
 {
-    internal class Service
+    public interface Service
     {
     }
 }
