@@ -28,5 +28,15 @@ namespace DoctorAppointment.Persistence.EF.Appointments
                 (_ => _.DoctorId == doctorId && _.Date.Day == day);
 
         }
+
+        public Appointment IsAppointmentExist(int id)
+        {
+            return _dataContext.Appointments.FirstOrDefault(_ => _.Id == id);
+        }
+
+        public void Update(Appointment appointment)
+        {
+            _dataContext.Update(appointment);
+        }
     }
 }

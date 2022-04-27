@@ -1,5 +1,6 @@
 ﻿using BookStore.Infrastructure.Test;
 using DoctorAppointment.Entities.Appointments;
+using DoctorAppointment.Entities.Doctors;
 using DoctorAppointment.Entities.Patients;
 using DoctorAppointment.Infrastructure.Application;
 using DoctorAppointment.Persistence.EF;
@@ -41,15 +42,9 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
         [Fact]
         public void Add_adds_appintment_properly()
         {
-            var doctor = new DoctorBuilder().CreateDoctor();
-            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
-            var patient = new PatientBuilder().CreatePatient();
-            _dataContext.Manipulate(_ => _.Patients.Add(patient));  
-            var appointment = new AppintmentBuilder()
-                .WithDoctorId(doctor.Id)
-                .WithPatientId(patient.Id)
-                .WithDate(DateTime.UtcNow)
-                .SetAppointment();
+            Doctor doctor = CreateADoctor();
+            Patient patient = CreateAPatient();
+            Appointment appointment = SetAnAppointment(doctor, patient);
 
             _sut.Add(appointment);
 
@@ -58,13 +53,14 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             expected.PatientId.Should().Be(appointment.PatientId);
             expected.Date.Should().Be(appointment.Date);
         }
+
+    
+
         [Fact]
         public void Add_throws_Exception_DoctorAppointmentsAreFullException_if_doctor_appointments_become_more_than_5_in_one_day()
         {
-            var doctor = new DoctorBuilder().CreateDoctor();
-            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
-            List<Patient> patients = CreateSixPatient();
-            _dataContext.Manipulate(_ => _.Patients.AddRange(patients));
+            Doctor doctor = CreateADoctor();
+            List<Patient> patients = CreateSixPatients();
             List<Appointment> appointments = SetAppointmetForSixPatient(doctor, patients);
 
             _sut.Add(appointments[0]);
@@ -75,6 +71,72 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Action expected = () => _sut.Add(appointments[5]);
 
             expected.Should().ThrowExactly<DoctorAppointmentsAreFullException>();
+        }
+
+      
+
+        [Fact]
+        public void Update_updates_an_appointment_properly()
+        {
+            Appointment appointment = SetAnAppointment();
+            Appointment updatedAppointment = UpdateCreatedAppointment();
+
+            _sut.Update(appointment.Id, updatedAppointment);
+
+            var expected = _dataContext.Appointments.FirstOrDefault(_ => _.Id == updatedAppointment.Id);
+            expected.PatientId.Should().Be(updatedAppointment.PatientId);
+
+
+        }
+        private static Appointment SetAnAppointment(Doctor doctor, Patient patient)
+        {
+            return new AppintmentBuilder()
+                .WithDoctorId(doctor.Id)
+                .WithPatientId(patient.Id)
+                .WithDate(DateTime.UtcNow)
+                .SetAppointment();
+        }
+
+        private Patient CreateAPatient()
+        {
+            var patient = new PatientBuilder().CreatePatient();
+            _dataContext.Manipulate(_ => _.Patients.Add(patient));
+            return patient;
+        }
+
+        private Doctor CreateADoctor()
+        {
+            var doctor = new DoctorBuilder().CreateDoctor();
+            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
+            return doctor;
+        }
+        private Appointment UpdateCreatedAppointment()
+        {
+            var updatedDoctor = new DoctorBuilder().WithFistName("edited").CreateDoctor();
+            _dataContext.Manipulate(_ => _.Doctors.Add(updatedDoctor));
+            var UpdatedPatient = new PatientBuilder().WithFirstName("edited").CreatePatient();
+            _dataContext.Manipulate(_ => _.Patients.Add(UpdatedPatient));
+            var updatedAppointment = new Appointment
+            {
+                DoctorId = updatedDoctor.Id,
+                PatientId = UpdatedPatient.Id,
+                Date = DateTime.Today
+            };
+            return updatedAppointment;
+        }
+
+        private Appointment SetAnAppointment()
+        {
+            var doctor = new DoctorBuilder().CreateDoctor();
+            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
+            var patient = new PatientBuilder().CreatePatient();
+            _dataContext.Manipulate(_ => _.Patients.Add(patient));
+            var appointment = new AppintmentBuilder()
+                .WithDoctorId(doctor.Id)
+                .WithPatientId(patient.Id)
+                .SetAppointment();
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointment));
+            return appointment;
         }
 
         private static List<Appointment> SetAppointmetForSixPatient(Entities.Doctors.Doctor doctor, List<Patient> patients)
@@ -106,11 +168,9 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
                 .SetAppointment(),
             };
         }
-
-        private static List<Patient> CreateSixPatient()
+        private List<Patient> CreateSixPatients()
         {
-            return new List<Patient>()
-            {
+            var patients = new List<Patient> {
                 new PatientBuilder().CreatePatient(),
                 new PatientBuilder().WithNationalCode("23789").CreatePatient(),
                 new PatientBuilder().WithFirstName("delvin").CreatePatient(),
@@ -119,6 +179,11 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
                 new PatientBuilder().WithNationalCode("1001").CreatePatient(),
 
             };
+
+            _dataContext.Manipulate(_ => _.Patients.AddRange(patients));
+            return patients;
         }
+
+
     }
 }

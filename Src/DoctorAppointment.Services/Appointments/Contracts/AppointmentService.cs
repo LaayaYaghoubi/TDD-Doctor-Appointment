@@ -11,5 +11,6 @@ namespace DoctorAppointment.Services.Appointments.Contracts
     public interface AppointmentService : Service
     {
         void Add(Appointment appointment);
+        void Update(int id, Appointment updatedAppointment);
     }
 }

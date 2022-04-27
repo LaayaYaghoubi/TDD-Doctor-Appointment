@@ -12,5 +12,7 @@ namespace DoctorAppointment.Services.Appointments.Contracts
     {
         void Add(Appointment appointment);
         int DoctorAppointmentCount(int doctorId, int day);
+        Appointment IsAppointmentExist(int id);
+        void Update(Appointment appointment);
     }
 }

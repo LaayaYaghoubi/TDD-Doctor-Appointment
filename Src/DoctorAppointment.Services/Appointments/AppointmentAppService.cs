@@ -32,5 +32,21 @@ namespace DoctorAppointment.Services.Appointments
             _repository.Add(appointment);
             _unitOfWork.Commit();   
         }
+
+        public void Update(int id, Appointment updatedAppointment)
+        {
+            var appointment = _repository.IsAppointmentExist(id);
+
+            if (appointment == null)
+            {
+                throw new ThereIsNoAppointmentWithThisIdException();
+            }
+            appointment.PatientId = updatedAppointment.PatientId;
+            appointment.Date = updatedAppointment.Date; 
+            appointment.DoctorId = updatedAppointment.DoctorId; 
+
+            _repository.Update(appointment);
+            _unitOfWork.Commit();
+        }
     }
 }
