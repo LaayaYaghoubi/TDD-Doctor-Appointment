@@ -81,16 +81,111 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Appointment appointment = SetAnAppointment();
             Appointment updatedAppointment = UpdateCreatedAppointment();
             _dataContext.Appointments.Add(updatedAppointment);
+
             _sut.Update(appointment.Id, updatedAppointment);
 
             var expected = _dataContext.Appointments.FirstOrDefault(_ => _.Id == updatedAppointment.Id);
             expected.PatientId.Should().Be(updatedAppointment.PatientId);
             expected.DoctorId.Should().Be(updatedAppointment.DoctorId);
             expected.Date.Should().Be(updatedAppointment.Date);
-
-
-
         }
+        [Fact]
+        public void Update_throws_exception_ThereIsNoAppointmentWithThisIdException_when_appointmemt_does_not_exist()
+        {
+            int fakeId = 576;
+            Appointment appointment = SetAnAppointment();
+            Appointment updatedAppointment = UpdateCreatedAppointment();
+            _dataContext.Appointments.Add(updatedAppointment);
+
+             Action expected =()=> _sut.Update(fakeId, updatedAppointment);
+
+            expected.Should().ThrowExactly<ThereIsNoAppointmentWithThisIdException>();
+        }
+        [Fact]
+        public void Update_throws_exception_DoctorAppointmentsAreFullException_when_appointmemt_does_not_exist()
+        {
+            Doctor doctor = CreateADoctor();
+            List<Patient> patients = CreateFivePatients();
+            List<Appointment> appointments = SetTheirAppointments(doctor, patients);
+            Patient newPatient = CreateANewPatient();
+            Appointment newAppointment = SetANewAppointmentForNewPatient(doctor, newPatient);
+            Appointment editedAppointment = EditNewPatientAppointmentDateToFivePatientAppointmentDate(doctor, appointments, newPatient);
+
+            Action expected = () => _sut.Update(newAppointment.Id, editedAppointment);
+
+            expected.Should().ThrowExactly<DoctorAppointmentsAreFullException>();
+        }
+
+        private Appointment EditNewPatientAppointmentDateToFivePatientAppointmentDate(Doctor doctor, List<Appointment> appointments, Patient newPatient)
+        {
+            var editedAppointment = new Appointment
+            {
+                DoctorId = doctor.Id,
+                PatientId = newPatient.Id,
+                Date = appointments[0].Date,
+            };
+            _dataContext.Manipulate(_ => _.Appointments.Add(editedAppointment));
+            return editedAppointment;
+        }
+
+        private Appointment SetANewAppointmentForNewPatient(Doctor doctor, Patient newPatient)
+        {
+            var newAppointment = new AppintmentBuilder()
+                .WithPatientId(newPatient.Id)
+                .WithDoctorId(doctor.Id)
+                .WithDate(DateTime.Parse("2022-04-27T05:21:13.390Z")).SetAppointment();
+            _dataContext.Manipulate(_ => _.Appointments.Add(newAppointment));
+            return newAppointment;
+        }
+
+        private Patient CreateANewPatient()
+        {
+            var newPatient = new PatientBuilder().WithNationalCode("654321").CreatePatient();
+            _dataContext.Manipulate(_ => _.Patients.Add(newPatient));
+            return newPatient;
+        }
+
+        private List<Appointment> SetTheirAppointments(Doctor doctor, List<Patient> patients)
+        {
+            var appointments = new List<Appointment>()
+            {
+                new AppintmentBuilder().WithDoctorId(doctor.Id)
+                .WithPatientId(patients[0].Id)
+                .SetAppointment(),
+                new AppintmentBuilder().
+                WithDoctorId(doctor.Id)
+                .WithPatientId(patients[1].Id)
+                .SetAppointment(),
+                new AppintmentBuilder()
+                .WithDoctorId(doctor.Id)
+                .WithPatientId(patients[2].Id)
+                .SetAppointment(),
+                new AppintmentBuilder()
+                .WithDoctorId(doctor.Id)
+                .WithPatientId(patients[3].Id)
+                .SetAppointment(),
+                new AppintmentBuilder()
+                .WithDoctorId(doctor.Id)
+                .WithPatientId(patients[4].Id)
+                .SetAppointment(),
+            };
+            _dataContext.Manipulate(_ => _.Appointments.AddRange(appointments));
+            return appointments;
+        }
+
+        private List<Patient> CreateFivePatients()
+        {
+            var patients = new List<Patient> {
+                new PatientBuilder().CreatePatient(),
+                new PatientBuilder().WithNationalCode("23789").CreatePatient(),
+                new PatientBuilder().WithFirstName("delvin").CreatePatient(),
+                new PatientBuilder().WithLastName("asadi").CreatePatient(),
+                new PatientBuilder().WithFirstName("laaya").CreatePatient(),
+            };
+            _dataContext.Manipulate(_ => _.Patients.AddRange(patients));
+            return patients;
+        }
+
         private static Appointment SetAnAppointment(Doctor doctor, Patient patient)
         {
             return new AppintmentBuilder()
