@@ -80,11 +80,14 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
         {
             Appointment appointment = SetAnAppointment();
             Appointment updatedAppointment = UpdateCreatedAppointment();
-
+            _dataContext.Appointments.Add(updatedAppointment);
             _sut.Update(appointment.Id, updatedAppointment);
 
             var expected = _dataContext.Appointments.FirstOrDefault(_ => _.Id == updatedAppointment.Id);
             expected.PatientId.Should().Be(updatedAppointment.PatientId);
+            expected.DoctorId.Should().Be(updatedAppointment.DoctorId);
+            expected.Date.Should().Be(updatedAppointment.Date);
+
 
 
         }

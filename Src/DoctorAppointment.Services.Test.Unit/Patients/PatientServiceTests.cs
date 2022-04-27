@@ -55,6 +55,11 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
             var updatedPatient = new PatientBuilder().WithFirstName("fili").CreatePatient();
             _dataContext.Manipulate(_ => _.Patients.Add(updatedPatient));
 
+            //var updatedPatient = new Patient
+            //{
+            //  FirstName = 
+            //}
+
             _sut.Update(patient.Id, updatedPatient);
 
             var expected = _dataContext.Patients.FirstOrDefault(_ => _.Id == updatedPatient.Id);

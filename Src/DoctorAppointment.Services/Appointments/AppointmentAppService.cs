@@ -41,9 +41,17 @@ namespace DoctorAppointment.Services.Appointments
             {
                 throw new ThereIsNoAppointmentWithThisIdException();
             }
+
+            int DoctorAppointmentCount = _repository.
+                DoctorAppointmentCount(updatedAppointment.DoctorId, updatedAppointment.Date.Day);
+            if (DoctorAppointmentCount >= 5)
+            {
+                throw new DoctorAppointmentsAreFullException();
+            }
+
             appointment.PatientId = updatedAppointment.PatientId;
-            appointment.Date = updatedAppointment.Date; 
-            appointment.DoctorId = updatedAppointment.DoctorId; 
+            appointment.Date = updatedAppointment.Date;
+            appointment.DoctorId = updatedAppointment.DoctorId;
 
             _repository.Update(appointment);
             _unitOfWork.Commit();
