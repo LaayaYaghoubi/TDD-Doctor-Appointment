@@ -20,7 +20,7 @@ namespace DoctorAppointment.Services.Appointments
             _unitOfWork = unitOfWork;
         }
 
-        public void Add(Appointment appointment)
+        public void Add(AddAppointmentDto appointment)
         {
             int DoctorAppointmentCount = _repository.
                 DoctorAppointmentCount(appointment.DoctorId, appointment.Date.Day);

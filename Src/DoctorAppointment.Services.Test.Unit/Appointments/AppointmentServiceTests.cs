@@ -45,8 +45,13 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Doctor doctor = CreateADoctor();
             Patient patient = CreateAPatient();
             Appointment appointment = SetAnAppointment(doctor, patient);
-
-            _sut.Add(appointment);
+            AddAppointmentDto addAppointmentDto = new AddAppointmentDto()
+            {
+                DoctorId = appointment.DoctorId,
+                PatientId = appointment.PatientId,
+                Date = appointment.Date
+            };
+            _sut.Add(addAppointmentDto);
 
             var expected = _dataContext.Appointments.FirstOrDefault();
             expected.DoctorId.Should().Be(appointment.DoctorId);
@@ -67,8 +72,14 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             _dataContext.Manipulate(_ => _.Appointments.Add(appointments[2]));
             _dataContext.Manipulate(_ => _.Appointments.Add(appointments[3]));
             _dataContext.Manipulate(_ => _.Appointments.Add(appointments[4]));
+            AddAppointmentDto addAppointmentDto = new AddAppointmentDto()
+            {
+                DoctorId = appointments[5].DoctorId,
+                PatientId = appointments[5].PatientId,
+                Date = appointments[5].Date,
+            };
 
-            Action expected = () => _sut.Add(appointments[5]);
+            Action expected = () => _sut.Add(addAppointmentDto);
 
             expected.Should().ThrowExactly<DoctorAppointmentsAreFullException>();
         }
@@ -93,9 +104,9 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             _sut.Update(appointment.Id, updateAppointmentDto);
 
             var expected = _dataContext.Appointments.FirstOrDefault(_ => _.Id == appointment.Id);
-            expected.PatientId.Should().Be(appointment.PatientId);
-            expected.DoctorId.Should().Be(appointment.DoctorId);
-            expected.Date.Should().Be(appointment.Date);
+            expected.PatientId.Should().Be(updateAppointmentDto.PatientId);
+            expected.DoctorId.Should().Be(updateAppointmentDto.DoctorId);
+            expected.Date.Should().Be(updateAppointmentDto.Date);
         }
         [Fact]
         public void Update_throws_exception_ThereIsNoAppointmentWithThisIdException_when_appointmemt_does_not_exist()

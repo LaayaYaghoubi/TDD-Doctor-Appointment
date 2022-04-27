@@ -10,7 +10,7 @@ namespace DoctorAppointment.Services.Appointments.Contracts
 {
     public interface AppointmentService : Service
     {
-        void Add(Appointment appointment);
+        void Add(AddAppointmentDto appointment);
         void Update(int id, UpdateAppointmentDto updatedAppointment);
         void Delete(int id);
         List<Appointment> GetAll();
