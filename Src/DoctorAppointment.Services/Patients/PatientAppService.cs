@@ -51,6 +51,10 @@ namespace DoctorAppointment.Services.Patients
             {
                 throw new PatientWithThisIdDoesNotExistException();
             }
+            patient.FirstName = updatedPatient.FirstName;
+            patient.LastName = updatedPatient.LastName;
+            patient.NationalCode = updatedPatient.NationalCode;
+
             _repository.Update(patient);
             _unitOfWork.Commit();
         }

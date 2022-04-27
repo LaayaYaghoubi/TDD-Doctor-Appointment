@@ -53,6 +53,11 @@ namespace DoctorAppointment.Services.Doctors
             {
                 throw new DoctorWithThisIdDoesNotExistException();
             }
+            doctor.FirstName = updatedDoctor.FirstName;
+            doctor.LastName = updatedDoctor.LastName;   
+            doctor.NationalCode = updatedDoctor.NationalCode;   
+            doctor.Field = updatedDoctor.Field;
+
             _repository.Update(doctor);
             _unitOfWork.Commit();
 

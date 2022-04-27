@@ -53,15 +53,22 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
             var doctor = new DoctorBuilder().CreateDoctor();
             _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
             var updatedDoctor = new DoctorBuilder().WithFistName("gholi").CreateDoctor();
-            _dataContext.Manipulate(_ => _.Doctors.Add(updatedDoctor));
+            var editedDoctor = new Doctor
+            {
+                FirstName = updatedDoctor.FirstName,
+                LastName = updatedDoctor.LastName,
+                NationalCode = updatedDoctor.NationalCode,
+                Field = updatedDoctor.Field,
+            };
+            _dataContext.Manipulate(_ => _.Doctors.Add(editedDoctor));
 
-            _sut.Update(doctor.Id, updatedDoctor);
+            _sut.Update(doctor.Id, editedDoctor);
 
-            var expected = _dataContext.Doctors.FirstOrDefault(_ => _.Id == updatedDoctor.Id);
-            expected.FirstName.Should().Be(updatedDoctor.FirstName);
-            expected.LastName.Should().Be(updatedDoctor.LastName);
-            expected.NationalCode.Should().Be(updatedDoctor.NationalCode);
-            expected.Field.Should().Be(updatedDoctor.Field);
+            var expected = _dataContext.Doctors.FirstOrDefault(_ => _.Id == editedDoctor.Id);
+            expected.FirstName.Should().Be(editedDoctor.FirstName);
+            expected.LastName.Should().Be(editedDoctor.LastName);
+            expected.NationalCode.Should().Be(editedDoctor.NationalCode);
+            expected.Field.Should().Be(editedDoctor.Field);
         }
         [Fact]
         public void Update_throws_DoctorWithThisIdDoesNotExistException_if_doctor_doesnot_exist()
@@ -70,9 +77,16 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
             var doctor = new DoctorBuilder().CreateDoctor();
             _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
             var updatedDoctor = new DoctorBuilder().WithFistName("gholi").CreateDoctor();
-            _dataContext.Manipulate(_ => _.Doctors.Add(updatedDoctor));
+            var editedDoctor = new Doctor
+            {
+                FirstName = updatedDoctor.FirstName,
+                LastName = updatedDoctor.LastName,
+                NationalCode = updatedDoctor.NationalCode,
+                Field = updatedDoctor.Field,
+            };
+            _dataContext.Manipulate(_ => _.Doctors.Add(editedDoctor));
 
-           Action expected =()=> _sut.Update(FakeId, updatedDoctor);
+            Action expected =()=> _sut.Update(FakeId, editedDoctor);
 
             expected.Should().ThrowExactly<DoctorWithThisIdDoesNotExistException>();
 

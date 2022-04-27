@@ -52,20 +52,21 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
         {
             var patient = new PatientBuilder().CreatePatient();
             _dataContext.Manipulate(_ => _.Patients.Add(patient));
-            var updatedPatient = new PatientBuilder().WithFirstName("fili").CreatePatient();
-            _dataContext.Manipulate(_ => _.Patients.Add(updatedPatient));
+            var updatedPatient = new PatientBuilder().WithFirstName("fili").CreatePatient();    
+            var EditededPatient = new Patient
+            {
+                FirstName = updatedPatient.FirstName,
+                LastName = updatedPatient.LastName,
+                NationalCode = updatedPatient.NationalCode,
+            };
+            _dataContext.Manipulate(_ => _.Patients.Add(EditededPatient));
 
-            //var updatedPatient = new Patient
-            //{
-            //  FirstName = 
-            //}
+            _sut.Update(patient.Id, EditededPatient);
 
-            _sut.Update(patient.Id, updatedPatient);
-
-            var expected = _dataContext.Patients.FirstOrDefault(_ => _.Id == updatedPatient.Id);
-            expected.FirstName.Should().Be(updatedPatient.FirstName);
-            expected.LastName.Should().Be(updatedPatient.LastName);
-            expected.NationalCode.Should().Be(updatedPatient.NationalCode);
+            var expected = _dataContext.Patients.FirstOrDefault(_ => _.Id == EditededPatient.Id);
+            expected.FirstName.Should().Be(EditededPatient.FirstName);
+            expected.LastName.Should().Be(EditededPatient.LastName);
+            expected.NationalCode.Should().Be(EditededPatient.NationalCode);
             
         }
         [Fact]
@@ -75,9 +76,17 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
             var patient = new PatientBuilder().CreatePatient();
             _dataContext.Manipulate(_ => _.Patients.Add(patient));
             var updatedPatient = new PatientBuilder().WithFirstName("joje").CreatePatient();
-            _dataContext.Manipulate(_ => _.Patients.Add(updatedPatient));
+            var EditededPatient = new Patient
+            {
+                FirstName = updatedPatient.FirstName,
+                LastName = updatedPatient.LastName,
+                NationalCode = updatedPatient.NationalCode,
+            };
+            _dataContext.Manipulate(_ => _.Patients.Add(EditededPatient));
 
-            Action expected = () => _sut.Update(FakeId, updatedPatient);
+            _sut.Update(patient.Id, EditededPatient);
+
+            Action expected = () => _sut.Update(FakeId, EditededPatient);
 
             expected.Should().ThrowExactly<PatientWithThisIdDoesNotExistException>();
         }
