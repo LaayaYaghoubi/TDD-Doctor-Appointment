@@ -50,8 +50,7 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
         [Fact]
         public void Update_updates_doctor_properly()
         {
-            var doctor = new DoctorBuilder().CreateDoctor();
-            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
+            Doctor doctor = CreateADoctor();
             var updatedDoctor = new DoctorBuilder().WithFistName("gholi").CreateDoctor();
             var editedDoctor = new Doctor
             {
@@ -70,6 +69,14 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
             expected.NationalCode.Should().Be(editedDoctor.NationalCode);
             expected.Field.Should().Be(editedDoctor.Field);
         }
+
+        private Doctor CreateADoctor()
+        {
+            var doctor = new DoctorBuilder().CreateDoctor();
+            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
+            return doctor;
+        }
+
         [Fact]
         public void Update_throws_DoctorWithThisIdDoesNotExistException_if_doctor_doesnot_exist()
         {
