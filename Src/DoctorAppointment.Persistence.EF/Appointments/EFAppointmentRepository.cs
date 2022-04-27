@@ -39,6 +39,16 @@ namespace DoctorAppointment.Persistence.EF.Appointments
             return _dataContext.Appointments.FirstOrDefault(_ => _.Id == id);
         }
 
+        public List<Appointment> GetAll()
+        {
+            return _dataContext.Appointments.Select(_ => new Appointment
+            {
+                DoctorId = _.DoctorId,
+                PatientId = _.PatientId,
+                Date = _.Date,
+            }).ToList();
+        }
+
         public Appointment IsAppointmentExist(int id)
         {
             return _dataContext.Appointments.FirstOrDefault(_ => _.Id == id);

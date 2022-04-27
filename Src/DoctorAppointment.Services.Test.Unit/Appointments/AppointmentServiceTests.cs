@@ -141,6 +141,32 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             expected.Should().ThrowExactly<ThereIsNoAppointmentWithThisIdException>();
 
         }
+        [Fact]
+        public void GetAll_returns_all_appointments_properly()
+        {
+            Doctor doctor = CreateADoctor();
+            List<Patient> patients = CreateFivePatients();
+            List<Appointment> appointments = SetTheirAppointments(doctor, patients);
+
+           var expected = _sut.GetAll();
+
+            expected.Should().HaveCount(5);
+            expected.Should().Contain(_ => _.DoctorId == appointments[0].DoctorId);
+            expected.Should().Contain(_ => _.PatientId == appointments[0].PatientId);
+            expected.Should().Contain(_ => _.Date == appointments[0].Date);
+            expected.Should().Contain(_ => _.DoctorId == appointments[1].DoctorId);
+            expected.Should().Contain(_ => _.PatientId == appointments[1].PatientId);
+            expected.Should().Contain(_ => _.Date == appointments[1].Date);
+            expected.Should().Contain(_ => _.DoctorId == appointments[2].DoctorId);
+            expected.Should().Contain(_ => _.PatientId == appointments[2].PatientId);
+            expected.Should().Contain(_ => _.Date == appointments[2].Date);
+            expected.Should().Contain(_ => _.DoctorId == appointments[3].DoctorId);
+            expected.Should().Contain(_ => _.PatientId == appointments[3].PatientId);
+            expected.Should().Contain(_ => _.Date == appointments[3].Date);
+            expected.Should().Contain(_ => _.DoctorId == appointments[4].DoctorId);
+            expected.Should().Contain(_ => _.PatientId == appointments[4].PatientId);
+            expected.Should().Contain(_ => _.Date == appointments[4].Date);
+        }
 
         private Appointment EditNewPatientAppointmentDateToFivePatientAppointmentDate(Doctor doctor, List<Appointment> appointments, Patient newPatient)
         {
