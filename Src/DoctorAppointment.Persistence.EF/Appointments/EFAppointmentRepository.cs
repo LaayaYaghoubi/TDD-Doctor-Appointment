@@ -1,5 +1,6 @@
 ﻿using DoctorAppointment.Entities.Appointments;
 using DoctorAppointment.Services.Appointments.Contracts;
+using DoctorAppointment.Services.Test.Unit.Appointments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,9 +40,9 @@ namespace DoctorAppointment.Persistence.EF.Appointments
             return _dataContext.Appointments.FirstOrDefault(_ => _.Id == id);
         }
 
-        public List<Appointment> GetAll()
+        public List<GetAllAppointmentDto> GetAll()
         {
-            return _dataContext.Appointments.Select(_ => new Appointment
+            return _dataContext.Appointments.Select(_ => new GetAllAppointmentDto
             {
                 DoctorId = _.DoctorId,
                 PatientId = _.PatientId,
