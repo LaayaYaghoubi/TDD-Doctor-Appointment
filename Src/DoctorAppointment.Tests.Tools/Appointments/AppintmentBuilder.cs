@@ -35,5 +35,10 @@ namespace DoctorAppointment.Tests.Tools.Appointments
             return this;
         }
 
+        public Appointment SetAppointment()
+        {
+            return appointment;
+        }
+
     }
     }
