@@ -10,7 +10,7 @@ namespace DoctorAppointment.Services.Patients.Contracts
 {
     public interface PatientRepository : Repository
     {
-        void Add(AddPatientDto patient);
+        void Add(Patient patient);
         Patient FindById(int id);
         void Update(Patient patient);
         void Delete(Patient patient);

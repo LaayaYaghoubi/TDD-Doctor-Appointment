@@ -12,8 +12,8 @@ namespace DoctorAppointment.Services.Doctors.Contracts
 {
     public interface DoctorService : Service 
     {
-        void Add(Doctor doctor);
-        void Update(int id, Doctor updatedDoctor);
+        void Add(AddDoctorDto doctor);
+        void Update(int id, UpdateDoctorDto updatedDoctor);
         void Delete(int id);
         List<Doctor> GetAll();
     }

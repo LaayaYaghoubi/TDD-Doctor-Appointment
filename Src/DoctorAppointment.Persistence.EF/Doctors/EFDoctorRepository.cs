@@ -51,7 +51,7 @@ namespace DoctorAppointment.Persistence.EF.Doctors
 
         public void Update(Doctor doctor)
         {
-            _dataContext.Doctors.Update(doctor);
+           // _dataContext.Doctors.Update(doctor);
         }
     }
 }

@@ -22,9 +22,17 @@ namespace DoctorAppointment.Services.Doctors
             _unitOfWork = unitOfWork;
         }
 
-        public void Add(Doctor doctor)
+        public void Add(AddDoctorDto doctor)
         {
-            _repository.Add(doctor);
+            var addedDoctor = new Doctor()
+            {
+                Field = doctor.Field,
+                FirstName = doctor.FirstName,
+                LastName = doctor.LastName,
+                NationalCode = doctor.NationalCode,
+
+            };
+            _repository.Add(addedDoctor);
             _unitOfWork.Commit();   
         }
 
@@ -46,7 +54,7 @@ namespace DoctorAppointment.Services.Doctors
             return _repository.GetAll();
         }
 
-        public void Update(int id, Doctor updatedDoctor)
+        public void Update(int id, UpdateDoctorDto updatedDoctor)
         {
             var doctor = _repository.FindById(id);
             if (doctor == null)

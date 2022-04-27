@@ -18,7 +18,7 @@ namespace DoctorAppointment.RestAPI.Controllers
         }
 
         [HttpPost]
-        public void Add(Doctor doctor)
+        public void Add(AddDoctorDto doctor)
         {
             _service.Add(doctor);
         }
@@ -30,7 +30,7 @@ namespace DoctorAppointment.RestAPI.Controllers
         }
 
         [HttpPut]
-        public void Update(int id, Doctor doctor)
+        public void Update(int id, UpdateDoctorDto doctor)
         {
             _service.Update(id, doctor);
         }

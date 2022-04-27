@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace DoctorAppointment.Services.Appointments.Contracts
 {
-    internal class AddAppointmetDto
+    public class AddAppointmetDto
     {
+        public DateTime Date { get; set; }
+        public int DoctorId { get; set; }
+        public int PatientId { get; set; }
     }
 }

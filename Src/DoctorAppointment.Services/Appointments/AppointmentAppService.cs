@@ -29,7 +29,14 @@ namespace DoctorAppointment.Services.Appointments
             {
                 throw new DoctorAppointmentsAreFullException();
             }
-            _repository.Add(appointment);
+            var addedAppointment = new Appointment()
+            {
+                PatientId = appointment.PatientId,
+                DoctorId = appointment.DoctorId,
+                Date = appointment.Date,
+            };
+
+            _repository.Add(addedAppointment);
             _unitOfWork.Commit();   
         }
 
@@ -49,7 +56,7 @@ namespace DoctorAppointment.Services.Appointments
             return _repository.GetAll();
         }
 
-        public void Update(int id, Appointment updatedAppointment)
+        public void Update(int id, UpdateAppointmentDto updatedAppointment)
         {
             var appointment = _repository.IsAppointmentExist(id);
 

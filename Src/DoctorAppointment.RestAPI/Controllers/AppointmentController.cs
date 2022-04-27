@@ -30,7 +30,7 @@ namespace DoctorAppointment.RestAPI.Controllers
         }
 
         [HttpPut]
-        public void Update(int id, Appointment appointment)
+        public void Update(int id, UpdateAppointmentDto appointment)
         {
             _service.Update(id, appointment);
         }

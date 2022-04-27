@@ -22,9 +22,16 @@ namespace DoctorAppointment.Services.Patients
             _unitOfWork = unitOfWork;
         }
 
-        public void Add(Patient patient)
+        public void Add(AddPatientDto patient)
         {
-            _repository.Add(patient);
+            var addedPatient = new Patient()
+            {
+               FirstName = patient.FirstName,   
+               LastName = patient.LastName,
+               NationalCode = patient.NationalCode,
+
+            };
+            _repository.Add(addedPatient);
             _unitOfWork.Commit();
         }
 
