@@ -46,7 +46,7 @@ namespace DoctorAppointment.Services.Patients
             _unitOfWork.Commit();
         }
 
-        public List<Patient> GetAll()
+        public List<GetPatientDto> GetAll()
         {
             return _repository.GetAll();
         }
