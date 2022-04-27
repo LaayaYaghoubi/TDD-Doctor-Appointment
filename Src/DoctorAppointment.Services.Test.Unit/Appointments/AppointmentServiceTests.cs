@@ -45,8 +45,14 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Doctor doctor = CreateADoctor();
             Patient patient = CreateAPatient();
             Appointment appointment = SetAnAppointment(doctor, patient);
+            AddAppointmetDto addAppointmetDto = new AddAppointmetDto()
+            {
+                PatientId = appointment.PatientId,
+                DoctorId = appointment.DoctorId,
+                Date = appointment.Date,
+            };
 
-            _sut.Add(appointment);
+            _sut.Add(addAppointmetDto);
 
             var expected = _dataContext.Appointments.FirstOrDefault();
             expected.DoctorId.Should().Be(appointment.DoctorId);
@@ -62,18 +68,42 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Doctor doctor = CreateADoctor();
             List<Patient> patients = CreateSixPatients();
             List<Appointment> appointments = SetAppointmetForSixPatient(doctor, patients);
+        
 
-            _sut.Add(appointments[0]);
-            _sut.Add(appointments[1]);
-            _sut.Add(appointments[2]);
-            _sut.Add(appointments[3]);
-            _sut.Add(appointments[4]);
-            Action expected = () => _sut.Add(appointments[5]);
+            _sut.Add(addAppointmetDto1);
+            _sut.Add(addAppointmetDto2);
+            _sut.Add(addAppointmetDto3);
+            _sut.Add(addAppointmetDto4);
+            _sut.Add(addAppointmetDto0);
+            Action expected = () => _sut.Add(addAppointmetDto5);
 
             expected.Should().ThrowExactly<DoctorAppointmentsAreFullException>();
         }
 
-      
+        private List<AddAppointmetDto> AddAppointmetDtos(List<Appointment> appointments)
+        {
+            List  <AddAppointmetDto> addAppointmetDtos = new List<AddAppointmetDto>();
+
+
+                 for (int i = 0; i < appointments.Count; i++)
+                 {
+                           new AddAppointmetDto
+                         {
+                            Date = appointments[i].Date,
+                            PatientId = appointments[i].PatientId,
+                             DoctorId = appointments[i].DoctorId,
+                         };
+                addAppointmetDtos.Add(new AddAppointmetDto);
+                 }
+                 return addAppointmetDtos;
+        }
+           
+        
+               
+           
+
+    }
+
 
         [Fact]
         public void Update_updates_an_appointment_properly()
@@ -81,6 +111,7 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Appointment appointment = SetAnAppointment();
             Appointment updatedAppointment = UpdateCreatedAppointment();
             _dataContext.Appointments.Add(updatedAppointment);
+
 
             _sut.Update(appointment.Id, updatedAppointment);
 

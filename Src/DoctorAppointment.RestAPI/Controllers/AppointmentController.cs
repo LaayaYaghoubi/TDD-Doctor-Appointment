@@ -29,12 +29,12 @@ namespace DoctorAppointment.RestAPI.Controllers
             return _service.GetAll();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public void Update(int id, Appointment appointment)
         {
             _service.Update(id, appointment);
         }
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public void Delete(int id)
         {
             _service.Delete(id);

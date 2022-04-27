@@ -50,51 +50,47 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
             [Fact]
         public void Update_updates_patient_properly()
         {
-            var patient = new PatientBuilder().CreatePatient();
-            _dataContext.Manipulate(_ => _.Patients.Add(patient));
-            var updatedPatient = new PatientBuilder().WithFirstName("fili").CreatePatient();    
-            var EditededPatient = new Patient
+            Patient patient = CreateApatient();
+            var updatedPatient = new PatientBuilder().WithFirstName("fili").CreatePatient();
+            _dataContext.Manipulate(_ => _.Patients.Add(updatedPatient));
+            UpdatePatientDto updatePatientDto = new UpdatePatientDto()
             {
                 FirstName = updatedPatient.FirstName,
                 LastName = updatedPatient.LastName,
                 NationalCode = updatedPatient.NationalCode,
             };
-            _dataContext.Manipulate(_ => _.Patients.Add(EditededPatient));
 
-            _sut.Update(patient.Id, EditededPatient);
+            _sut.Update(patient.Id, updatePatientDto);
 
-            var expected = _dataContext.Patients.FirstOrDefault(_ => _.Id == EditededPatient.Id);
-            expected.FirstName.Should().Be(EditededPatient.FirstName);
-            expected.LastName.Should().Be(EditededPatient.LastName);
-            expected.NationalCode.Should().Be(EditededPatient.NationalCode);
-            
+            var expected = _dataContext.Patients.FirstOrDefault(_ => _.Id == updatedPatient.Id);
+            expected.FirstName.Should().Be(updatedPatient.FirstName);
+            expected.LastName.Should().Be(updatedPatient.LastName);
+            expected.NationalCode.Should().Be(updatedPatient.NationalCode);
+
         }
+
         [Fact]
         public void Update_throws_PatientWithThisIdDoesNotExistException_if_patient_doesnot_exist()
         {
             int FakeId = 987;
-            var patient = new PatientBuilder().CreatePatient();
-            _dataContext.Manipulate(_ => _.Patients.Add(patient));
+            Patient patient = CreateApatient();
             var updatedPatient = new PatientBuilder().WithFirstName("joje").CreatePatient();
-            var EditededPatient = new Patient
+            _dataContext.Manipulate(_ => _.Patients.Add(updatedPatient));
+            UpdatePatientDto updatePatientDto = new UpdatePatientDto()
             {
                 FirstName = updatedPatient.FirstName,
                 LastName = updatedPatient.LastName,
                 NationalCode = updatedPatient.NationalCode,
             };
-            _dataContext.Manipulate(_ => _.Patients.Add(EditededPatient));
 
-            _sut.Update(patient.Id, EditededPatient);
-
-            Action expected = () => _sut.Update(FakeId, EditededPatient);
+            Action expected = () => _sut.Update(FakeId, updatePatientDto);
 
             expected.Should().ThrowExactly<PatientWithThisIdDoesNotExistException>();
         }
         [Fact]
         public void Delete_deletes_patient_properly()
         {
-            var patient = new PatientBuilder().CreatePatient();
-            _dataContext.Manipulate(_ => _.Patients.Add(patient));
+            Patient patient = CreateApatient();
 
             _sut.Delete(patient.Id);
 
@@ -104,8 +100,7 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
         public void Delete_throws_PatientWithThisIdDoesNotExistException_if_patient_doesnot_exist()
         {
             int FakeId = 134;
-            var patient = new PatientBuilder().CreatePatient();
-            _dataContext.Manipulate(_ => _.Patients.Add(patient));
+            Patient patient = CreateApatient();
 
             Action expected = () => _sut.Delete(FakeId);
 
@@ -135,5 +130,13 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
             expected.Should().Contain(_ => _.LastName == patients[1].LastName);
             expected.Should().Contain(_ => _.NationalCode == patients[1].NationalCode);
         }
+
+        private Patient CreateApatient()
+        {
+            var patient = new PatientBuilder().CreatePatient();
+            _dataContext.Manipulate(_ => _.Patients.Add(patient));
+            return patient;
+        }
+
     }
 }

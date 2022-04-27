@@ -51,17 +51,16 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
         public void Update_updates_doctor_properly()
         {
             Doctor doctor = CreateADoctor();
-            var updatedDoctor = new DoctorBuilder().WithFistName("gholi").CreateDoctor();
-            var editedDoctor = new Doctor
+            Doctor editedDoctor = UpdateCreateedDoctor();
+            UpdateDoctorDto updateDoctorDto = new UpdateDoctorDto()
             {
-                FirstName = updatedDoctor.FirstName,
-                LastName = updatedDoctor.LastName,
-                NationalCode = updatedDoctor.NationalCode,
-                Field = updatedDoctor.Field,
+                FirstName = editedDoctor.FirstName,
+                LastName = editedDoctor.LastName,
+                NationalCode = editedDoctor.NationalCode,
+                Field = editedDoctor.Field
             };
-            _dataContext.Manipulate(_ => _.Doctors.Add(editedDoctor));
 
-            _sut.Update(doctor.Id, editedDoctor);
+            _sut.Update(doctor.Id, updateDoctorDto);
 
             var expected = _dataContext.Doctors.FirstOrDefault(_ => _.Id == editedDoctor.Id);
             expected.FirstName.Should().Be(editedDoctor.FirstName);
@@ -70,30 +69,23 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
             expected.Field.Should().Be(editedDoctor.Field);
         }
 
-        private Doctor CreateADoctor()
-        {
-            var doctor = new DoctorBuilder().CreateDoctor();
-            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
-            return doctor;
-        }
+    
 
         [Fact]
         public void Update_throws_DoctorWithThisIdDoesNotExistException_if_doctor_doesnot_exist()
         {
             int FakeId = 987;
-            var doctor = new DoctorBuilder().CreateDoctor();
-            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
-            var updatedDoctor = new DoctorBuilder().WithFistName("gholi").CreateDoctor();
-            var editedDoctor = new Doctor
+            Doctor doctor = CreateADoctor();
+            Doctor editedDoctor = UpdateCreateedDoctor();
+            UpdateDoctorDto updateDoctorDto = new UpdateDoctorDto()
             {
-                FirstName = updatedDoctor.FirstName,
-                LastName = updatedDoctor.LastName,
-                NationalCode = updatedDoctor.NationalCode,
-                Field = updatedDoctor.Field,
+                FirstName = editedDoctor.FirstName,
+                LastName = editedDoctor.LastName,
+                NationalCode = editedDoctor.NationalCode,
+                Field = editedDoctor.Field
             };
-            _dataContext.Manipulate(_ => _.Doctors.Add(editedDoctor));
 
-            Action expected =()=> _sut.Update(FakeId, editedDoctor);
+            Action expected =()=> _sut.Update(FakeId, updateDoctorDto);
 
             expected.Should().ThrowExactly<DoctorWithThisIdDoesNotExistException>();
 
@@ -103,8 +95,7 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
         [Fact]
         public void Delete_deletes_doctor_properly()
         {
-            var doctor = new DoctorBuilder().CreateDoctor();
-            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
+            Doctor doctor = CreateADoctor();
 
             _sut.Delete(doctor.Id);
 
@@ -114,10 +105,9 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
         public void Delete_throws_DoctorWithThisIdDoesNotExistException_if_doctor_doesnot_exist()
         {
             int FakeId = 134;
-            var doctor = new DoctorBuilder().CreateDoctor();
-            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
+            Doctor doctor = CreateADoctor();
 
-           Action expected =()=> _sut.Delete(FakeId);
+            Action expected =()=> _sut.Delete(FakeId);
 
            expected.Should().ThrowExactly<DoctorWithThisIdDoesNotExistException>();
   
@@ -125,16 +115,7 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
         [Fact]
         public void GetAll_returns_all_doctors_properly()
         {
-            var doctors = new List<Doctor>()
-           {
-               new DoctorBuilder().CreateDoctor(),
-               new DoctorBuilder().WithFistName("ali")
-               .WithLastName("moghimi")
-               .WithNationalCode("23456")
-               .WithField("gosh").CreateDoctor()
-
-        };
-            _dataContext.Manipulate(_ => _.Doctors.AddRange(doctors));
+            List<Doctor> doctors = CreateTwoDoctors();
 
             var expected = _sut.GetAll();
 
@@ -147,7 +128,43 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
             expected.Should().Contain(_ => _.LastName == doctors[1].LastName);
             expected.Should().Contain(_ => _.NationalCode == doctors[1].NationalCode);
             expected.Should().Contain(_ => _.Field == doctors[1].Field);
-            
+
+        }
+
+        private List<Doctor> CreateTwoDoctors()
+        {
+            var doctors = new List<Doctor>()
+           {
+               new DoctorBuilder().CreateDoctor(),
+               new DoctorBuilder().WithFistName("ali")
+               .WithLastName("moghimi")
+               .WithNationalCode("23456")
+               .WithField("gosh").CreateDoctor()
+
+        };
+            _dataContext.Manipulate(_ => _.Doctors.AddRange(doctors));
+            return doctors;
+        }
+
+        private Doctor UpdateCreateedDoctor()
+        {
+            var updatedDoctor = new DoctorBuilder().WithFistName("gholi").CreateDoctor();
+            var editedDoctor = new Doctor
+            {
+                FirstName = updatedDoctor.FirstName,
+                LastName = updatedDoctor.LastName,
+                NationalCode = updatedDoctor.NationalCode,
+                Field = updatedDoctor.Field,
+            };
+            _dataContext.Manipulate(_ => _.Doctors.Add(editedDoctor));
+            return editedDoctor;
+        }
+
+        private Doctor CreateADoctor()
+        {
+            var doctor = new DoctorBuilder().CreateDoctor();
+            _dataContext.Manipulate(_ => _.Doctors.Add(doctor));
+            return doctor;
         }
     }
 }

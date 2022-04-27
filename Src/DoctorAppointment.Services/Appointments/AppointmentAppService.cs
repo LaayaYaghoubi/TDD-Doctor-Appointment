@@ -33,6 +33,22 @@ namespace DoctorAppointment.Services.Appointments
             _unitOfWork.Commit();   
         }
 
+        public void Delete(int id)
+        {
+            var appointment = _repository.FindById(id);
+            if (appointment == null)
+            {
+                throw new ThereIsNoAppointmentWithThisIdException();
+            }
+            _repository.Delete(appointment);
+            _unitOfWork.Commit();
+        }
+
+        public List<Appointment> GetAll()
+        {
+            return _repository.GetAll();
+        }
+
         public void Update(int id, Appointment updatedAppointment)
         {
             var appointment = _repository.IsAppointmentExist(id);

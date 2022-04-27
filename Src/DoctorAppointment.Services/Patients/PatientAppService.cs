@@ -44,7 +44,7 @@ namespace DoctorAppointment.Services.Patients
             return _repository.GetAll();
         }
 
-        public void Update(int id, Patient updatedPatient)
+        public void Update(int id, UpdatePatientDto updatedPatient)
         {
             var patient = _repository.FindById(id);
             if (patient == null)

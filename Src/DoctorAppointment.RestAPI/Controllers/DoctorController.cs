@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace DoctorAppointment.RestAPI.Controllers
 {
-    [Route("api/[doctors]")]
+    [Route("api/doctors")]
     [ApiController]
     public class DoctorController : ControllerBase
     {
@@ -29,12 +29,12 @@ namespace DoctorAppointment.RestAPI.Controllers
            return _service.GetAll();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public void Update(int id, Doctor doctor)
         {
             _service.Update(id, doctor);
         }
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public void Delete(int id)
         {
             _service.Delete(id);

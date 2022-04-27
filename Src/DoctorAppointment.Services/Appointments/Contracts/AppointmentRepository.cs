@@ -14,5 +14,8 @@ namespace DoctorAppointment.Services.Appointments.Contracts
         int DoctorAppointmentCount(int doctorId, int day);
         Appointment IsAppointmentExist(int id);
         void Update(Appointment appointment);
+        Appointment FindById(int id);
+        void Delete(Appointment appointment);
+        List<Appointment> GetAll();
     }
 }
