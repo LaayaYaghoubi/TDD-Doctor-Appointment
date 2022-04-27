@@ -42,42 +42,22 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
         [Fact]
         public void Add_adds_appintment_properly()
         {
-            Doctor doctor = CreateADoctor();
-            Patient patient = CreateAPatient();
-            Appointment appointment = SetAnAppointment(doctor, patient);
-            AddAppointmentDto addAppointmentDto = new AddAppointmentDto()
-            {
-                DoctorId = appointment.DoctorId,
-                PatientId = appointment.PatientId,
-                Date = appointment.Date
-            };
+            AddAppointmentDto addAppointmentDto = CreateAnAppointment();
+
             _sut.Add(addAppointmentDto);
 
             var expected = _dataContext.Appointments.FirstOrDefault();
-            expected.DoctorId.Should().Be(appointment.DoctorId);
-            expected.PatientId.Should().Be(appointment.PatientId);
-            expected.Date.Should().Be(appointment.Date);
+            expected.DoctorId.Should().Be(addAppointmentDto.DoctorId);
+            expected.PatientId.Should().Be(addAppointmentDto.PatientId);
+            expected.Date.Should().Be(addAppointmentDto.Date);
         }
 
-
+   
 
         [Fact]
         public void Add_throws_Exception_DoctorAppointmentsAreFullException_if_doctor_appointments_become_more_than_5_in_one_day()
         {
-            Doctor doctor = CreateADoctor();
-            List<Patient> patients = CreateSixPatients();
-            List<Appointment> appointments = SetAppointmetForSixPatient(doctor, patients);
-            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[0]));
-            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[1]));
-            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[2]));
-            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[3]));
-            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[4]));
-            AddAppointmentDto addAppointmentDto = new AddAppointmentDto()
-            {
-                DoctorId = appointments[5].DoctorId,
-                PatientId = appointments[5].PatientId,
-                Date = appointments[5].Date,
-            };
+            AddAppointmentDto addAppointmentDto = CreateSixthPatient();
 
             Action expected = () => _sut.Add(addAppointmentDto);
 
@@ -85,21 +65,11 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
         }
 
 
-
         [Fact]
         public void Update_updates_an_appointment_properly()
         {
             Appointment appointment = SetAnAppointment();
-            var updatedDoctor = new DoctorBuilder().WithFistName("edited").CreateDoctor();
-            _dataContext.Manipulate(_ => _.Doctors.Add(updatedDoctor));
-            var UpdatedPatient = new PatientBuilder().WithFirstName("edited").CreatePatient();
-            _dataContext.Manipulate(_ => _.Patients.Add(UpdatedPatient));
-            UpdateAppointmentDto updateAppointmentDto = new UpdateAppointmentDto()
-            {
-                DoctorId = updatedDoctor.Id,
-                PatientId = UpdatedPatient.Id,
-                Date = appointment.Date,
-            };
+            UpdateAppointmentDto updateAppointmentDto = ChangeCreatedAppointment(appointment);
 
             _sut.Update(appointment.Id, updateAppointmentDto);
 
@@ -108,28 +78,20 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             expected.DoctorId.Should().Be(updateAppointmentDto.DoctorId);
             expected.Date.Should().Be(updateAppointmentDto.Date);
         }
+
+     
         [Fact]
         public void Update_throws_exception_ThereIsNoAppointmentWithThisIdException_when_appointmemt_does_not_exist()
         {
             int fakeId = 576;
-            Appointment appointment = SetAnAppointment();
-            var updatedDoctor = new DoctorBuilder().WithFistName("edited").CreateDoctor();
-            _dataContext.Manipulate(_ => _.Doctors.Add(updatedDoctor));
-            var UpdatedPatient = new PatientBuilder().WithFirstName("edited").CreatePatient();
-            _dataContext.Manipulate(_ => _.Patients.Add(UpdatedPatient));
-            UpdateAppointmentDto updateAppointmentDto = new UpdateAppointmentDto()
-            {
-                DoctorId = updatedDoctor.Id,
-                PatientId = UpdatedPatient.Id,
-                Date = appointment.Date,
-            };
-
+            UpdateAppointmentDto updateAppointmentDto = new UpdateAppointmentDto();
+           
             Action expected = () => _sut.Update(fakeId, updateAppointmentDto);
 
             expected.Should().ThrowExactly<ThereIsNoAppointmentWithThisIdException>();
         }
         [Fact]
-        public void Update_throws_exception_DoctorAppointmentsAreFullException_when_appointmemt_does_not_exist()
+        public void Update_throws_exception_DoctorAppointmentsAreFullException_when_appointmemts_are_full()
         {
             Doctor doctor = CreateADoctor();
             List<Patient> patients = CreateFivePatients();
@@ -147,26 +109,24 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
 
             expected.Should().ThrowExactly<DoctorAppointmentsAreFullException>();
         }
+
+  
+
         [Fact]
         public void Delete_deletes_appointment_properly()
         {
-            Doctor doctor = CreateADoctor();
-            Patient patient = CreateAPatient();
-            Appointment appointment = SetAnAppointment(doctor, patient);
-            _dataContext.Manipulate(_ => _.Appointments.Add(appointment));
+            Appointment appointment = AddAnAppointment();
 
             _sut.Delete(appointment.Id);
 
             _dataContext.Appointments.Should().NotContain(appointment);
         }
+
+   
         [Fact]
         public void Delete_throws_ThereIsNoAppointmentWithThisIdException_when_appointment_does_not_exist_to_delete()
         {
             int fakeId = 590;
-            Doctor doctor = CreateADoctor();
-            Patient patient = CreateAPatient();
-            Appointment appointment = SetAnAppointment(doctor, patient);
-            _dataContext.Manipulate(_ => _.Appointments.Add(appointment));
 
             Action expected = () => _sut.Delete(fakeId);
 
@@ -179,7 +139,7 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Doctor doctor = CreateADoctor();
             List<Patient> patients = CreateFivePatients();
             List<Appointment> appointments = SetTheirAppointments(doctor, patients);
-            SetGetAllAppointmentDto(appointments);
+            
 
             var expected = _sut.GetAll();
 
@@ -201,42 +161,7 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             expected.Should().Contain(_ => _.Date == appointments[4].Date);
         }
 
-        private static void SetGetAllAppointmentDto(List<Appointment> appointments)
-        {
-            List<GetAllAppointmentDto> getAllAppointmentDto = new List<GetAllAppointmentDto>()
-            {
-               new GetAllAppointmentDto()
-               {
-                  DoctorId = appointments[0].DoctorId,
-                  PatientId = appointments[0].PatientId,
-                  Date = appointments[0].Date
-               },
-                  new GetAllAppointmentDto()
-               {
-                  DoctorId = appointments[1].DoctorId,
-                  PatientId = appointments[1].PatientId,
-                  Date = appointments[1].Date
-               },
-                     new GetAllAppointmentDto()
-               {
-                  DoctorId = appointments[2].DoctorId,
-                  PatientId = appointments[2].PatientId,
-                  Date = appointments[2].Date
-               },
-                        new GetAllAppointmentDto()
-               {
-                  DoctorId = appointments[3].DoctorId,
-                  PatientId = appointments[3].PatientId,
-                  Date = appointments[3].Date
-               },
-                           new GetAllAppointmentDto()
-               {
-                  DoctorId = appointments[4].DoctorId,
-                  PatientId = appointments[4].PatientId,
-                  Date = appointments[4].Date
-               },
-            };
-        }
+        
 
         private Appointment SetANewAppointmentForNewPatient(Doctor doctor, Patient newPatient)
         {
@@ -333,7 +258,7 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             return appointment;
         }
 
-        private static List<Appointment> SetAppointmetForSixPatient(Entities.Doctors.Doctor doctor, List<Patient> patients)
+        private static List<Appointment> SetAppointmetForSixPatient(Doctor doctor, List<Patient> patients)
         {
             return new List<Appointment>()
             {
@@ -377,6 +302,64 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             _dataContext.Manipulate(_ => _.Patients.AddRange(patients));
             return patients;
         }
+
+        private AddAppointmentDto CreateSixthPatient()
+        {
+            Doctor doctor = CreateADoctor();
+            List<Patient> patients = CreateSixPatients();
+            List<Appointment> appointments = SetAppointmetForSixPatient(doctor, patients);
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[0]));
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[1]));
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[2]));
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[3]));
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[4]));
+            AddAppointmentDto addAppointmentDto = new AddAppointmentDto()
+            {
+                DoctorId = appointments[5].DoctorId,
+                PatientId = appointments[5].PatientId,
+                Date = appointments[5].Date,
+            };
+            return addAppointmentDto;
+        }
+        private UpdateAppointmentDto ChangeCreatedAppointment(Appointment appointment)
+        {
+            var updateDoctor = new DoctorBuilder().WithFistName("edited").CreateDoctor();
+            _dataContext.Manipulate(_ => _.Doctors.Add(updateDoctor));
+            var UpdatePatient = new PatientBuilder().WithFirstName("edited").CreatePatient();
+            _dataContext.Manipulate(_ => _.Patients.Add(UpdatePatient));
+            UpdateAppointmentDto updateAppointmentDto = new UpdateAppointmentDto()
+            {
+                DoctorId = updateDoctor.Id,
+                PatientId = UpdatePatient.Id,
+                Date = appointment.Date,
+            };
+            return updateAppointmentDto;
+        }
+      
+
+        private AddAppointmentDto CreateAnAppointment()
+        {
+            Doctor doctor = CreateADoctor();
+            Patient patient = CreateAPatient();
+            AddAppointmentDto addAppointmentDto = new AddAppointmentDto()
+            {
+                DoctorId = doctor.Id,
+                PatientId = patient.Id,
+                Date = DateTime.Now,
+            };
+            return addAppointmentDto;
+        }
+        private Appointment AddAnAppointment()
+        {
+            Doctor doctor = CreateADoctor();
+            Patient patient = CreateAPatient();
+            Appointment appointment = SetAnAppointment(doctor, patient);
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointment));
+            return appointment;
+        }
+
+
+
 
 
     }
