@@ -49,7 +49,7 @@ namespace DoctorAppointment.Services.Doctors
 
         }
 
-        public List<Doctor> GetAll()
+        public List<GetDoctorDto> GetAll()
         {
             return _repository.GetAll();
         }

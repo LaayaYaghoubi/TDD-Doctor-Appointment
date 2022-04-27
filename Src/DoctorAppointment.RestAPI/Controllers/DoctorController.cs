@@ -24,7 +24,7 @@ namespace DoctorAppointment.RestAPI.Controllers
         }
 
         [HttpGet]
-        public List<Doctor> GetAll()
+        public List<GetDoctorDto> GetAll()
         {
            return _service.GetAll();
         }

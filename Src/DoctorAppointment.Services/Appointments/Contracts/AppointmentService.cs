@@ -1,5 +1,6 @@
 ﻿using DoctorAppointment.Entities.Appointments;
 using DoctorAppointment.Infrastructure.Application;
+using DoctorAppointment.Services.Test.Unit.Appointments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,6 @@ namespace DoctorAppointment.Services.Appointments.Contracts
         void Add(AddAppointmentDto appointment);
         void Update(int id, UpdateAppointmentDto updatedAppointment);
         void Delete(int id);
-        List<Appointment> GetAll();
+        List<GetAllAppointmentDto> GetAll();
     }
 }

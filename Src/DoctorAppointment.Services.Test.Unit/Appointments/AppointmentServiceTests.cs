@@ -179,6 +179,7 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Doctor doctor = CreateADoctor();
             List<Patient> patients = CreateFivePatients();
             List<Appointment> appointments = SetTheirAppointments(doctor, patients);
+            SetGetAllAppointmentDto(appointments);
 
             var expected = _sut.GetAll();
 
@@ -198,6 +199,43 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             expected.Should().Contain(_ => _.DoctorId == appointments[4].DoctorId);
             expected.Should().Contain(_ => _.PatientId == appointments[4].PatientId);
             expected.Should().Contain(_ => _.Date == appointments[4].Date);
+        }
+
+        private static void SetGetAllAppointmentDto(List<Appointment> appointments)
+        {
+            List<GetAllAppointmentDto> getAllAppointmentDto = new List<GetAllAppointmentDto>()
+            {
+               new GetAllAppointmentDto()
+               {
+                  DoctorId = appointments[0].DoctorId,
+                  PatientId = appointments[0].PatientId,
+                  Date = appointments[0].Date
+               },
+                  new GetAllAppointmentDto()
+               {
+                  DoctorId = appointments[1].DoctorId,
+                  PatientId = appointments[1].PatientId,
+                  Date = appointments[1].Date
+               },
+                     new GetAllAppointmentDto()
+               {
+                  DoctorId = appointments[2].DoctorId,
+                  PatientId = appointments[2].PatientId,
+                  Date = appointments[2].Date
+               },
+                        new GetAllAppointmentDto()
+               {
+                  DoctorId = appointments[3].DoctorId,
+                  PatientId = appointments[3].PatientId,
+                  Date = appointments[3].Date
+               },
+                           new GetAllAppointmentDto()
+               {
+                  DoctorId = appointments[4].DoctorId,
+                  PatientId = appointments[4].PatientId,
+                  Date = appointments[4].Date
+               },
+            };
         }
 
         private Appointment SetANewAppointmentForNewPatient(Doctor doctor, Patient newPatient)

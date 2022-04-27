@@ -14,7 +14,7 @@ namespace DoctorAppointment.Services.Doctors.Contracts
         Doctor FindById(int id);
         void Update(Doctor doctor);
         void Delete(Doctor doctor);
-        List<Doctor> GetAll();
+        List<GetDoctorDto> GetAll();
         bool IsDoctorExist(int id);
     }
 }

@@ -32,9 +32,9 @@ namespace DoctorAppointment.Persistence.EF.Doctors
             return _dataContext.Doctors.Find(id);
         }
 
-        public List<Doctor> GetAll()
+        public List<GetDoctorDto> GetAll()
         {
-            return _dataContext.Doctors.Select(_ => new Doctor
+            return _dataContext.Doctors.Select(_ => new GetDoctorDto
             {
                 FirstName = _.FirstName,
                 LastName = _.LastName,
