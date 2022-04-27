@@ -38,8 +38,15 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
         public void Add_adds_doctor_properly()
         {
             var doctor = new DoctorBuilder().CreateDoctor();
+            AddDoctorDto addDoctorDto = new AddDoctorDto()
+            {
+                FirstName = doctor.FirstName,
+                LastName = doctor.LastName,
+                NationalCode = doctor.NationalCode,
+                Field = doctor.Field,
+            };
           
-            _sut.Add(doctor);
+            _sut.Add(addDoctorDto);
 
             var expected = _dataContext.Doctors.FirstOrDefault();
             expected.FirstName.Should().Be(doctor.FirstName);
@@ -50,23 +57,22 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
         [Fact]
         public void Update_updates_doctor_properly()
         {
-            Doctor doctor = CreateADoctor();
-            Doctor editedDoctor = UpdateCreateedDoctor();
+            Doctor doctor = CreateADoctor(); 
             UpdateDoctorDto updateDoctorDto = new UpdateDoctorDto()
             {
-                FirstName = editedDoctor.FirstName,
-                LastName = editedDoctor.LastName,
-                NationalCode = editedDoctor.NationalCode,
-                Field = editedDoctor.Field
+                FirstName = doctor.FirstName,
+                LastName = doctor.LastName,
+                NationalCode = "23456",
+                Field = doctor.Field
             };
 
             _sut.Update(doctor.Id, updateDoctorDto);
 
-            var expected = _dataContext.Doctors.FirstOrDefault(_ => _.Id == editedDoctor.Id);
-            expected.FirstName.Should().Be(editedDoctor.FirstName);
-            expected.LastName.Should().Be(editedDoctor.LastName);
-            expected.NationalCode.Should().Be(editedDoctor.NationalCode);
-            expected.Field.Should().Be(editedDoctor.Field);
+            var expected = _dataContext.Doctors.FirstOrDefault(_ => _.Id == doctor.Id);
+            expected.FirstName.Should().Be(doctor.FirstName);
+            expected.LastName.Should().Be(doctor.LastName);
+            expected.NationalCode.Should().Be(doctor.NationalCode);
+            expected.Field.Should().Be(doctor.Field);
         }
 
     
@@ -76,13 +82,13 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
         {
             int FakeId = 987;
             Doctor doctor = CreateADoctor();
-            Doctor editedDoctor = UpdateCreateedDoctor();
+          
             UpdateDoctorDto updateDoctorDto = new UpdateDoctorDto()
             {
-                FirstName = editedDoctor.FirstName,
-                LastName = editedDoctor.LastName,
-                NationalCode = editedDoctor.NationalCode,
-                Field = editedDoctor.Field
+                FirstName = doctor.FirstName,
+                LastName = doctor.LastName,
+                NationalCode = doctor.NationalCode,
+                Field = "heart"
             };
 
             Action expected =()=> _sut.Update(FakeId, updateDoctorDto);
@@ -146,19 +152,7 @@ namespace DoctorAppointment.Services.Test.Unit.Doctors
             return doctors;
         }
 
-        private Doctor UpdateCreateedDoctor()
-        {
-            var updatedDoctor = new DoctorBuilder().WithFistName("gholi").CreateDoctor();
-            var editedDoctor = new Doctor
-            {
-                FirstName = updatedDoctor.FirstName,
-                LastName = updatedDoctor.LastName,
-                NationalCode = updatedDoctor.NationalCode,
-                Field = updatedDoctor.Field,
-            };
-            _dataContext.Manipulate(_ => _.Doctors.Add(editedDoctor));
-            return editedDoctor;
-        }
+    
 
         private Doctor CreateADoctor()
         {

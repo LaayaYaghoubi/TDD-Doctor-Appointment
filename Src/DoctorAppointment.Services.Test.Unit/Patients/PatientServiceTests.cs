@@ -38,8 +38,14 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
         public void Add_adds_patient_properly()
         {
             var patient = new PatientBuilder().CreatePatient();
+            AddPatientDto addPatientDto = new AddPatientDto()
+            {
+                FirstName = patient.FirstName,
+                LastName = patient.LastName,
+                NationalCode = patient.NationalCode,
+            };
           
-            _sut.Add(patient);
+            _sut.Add(addPatientDto);
 
             var expected = _dataContext.Patients.FirstOrDefault();
             expected.FirstName.Should().Be(patient.FirstName);
@@ -51,21 +57,20 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
         public void Update_updates_patient_properly()
         {
             Patient patient = CreateApatient();
-            var updatedPatient = new PatientBuilder().WithFirstName("fili").CreatePatient();
-            _dataContext.Manipulate(_ => _.Patients.Add(updatedPatient));
+          
             UpdatePatientDto updatePatientDto = new UpdatePatientDto()
             {
-                FirstName = updatedPatient.FirstName,
-                LastName = updatedPatient.LastName,
-                NationalCode = updatedPatient.NationalCode,
+                FirstName = "laaya",
+                LastName = patient.LastName,
+                NationalCode = patient.NationalCode,
             };
 
             _sut.Update(patient.Id, updatePatientDto);
 
-            var expected = _dataContext.Patients.FirstOrDefault(_ => _.Id == updatedPatient.Id);
-            expected.FirstName.Should().Be(updatedPatient.FirstName);
-            expected.LastName.Should().Be(updatedPatient.LastName);
-            expected.NationalCode.Should().Be(updatedPatient.NationalCode);
+            var expected = _dataContext.Patients.FirstOrDefault(_ => _.Id == patient.Id);
+            expected.FirstName.Should().Be(patient.FirstName);
+            expected.LastName.Should().Be(patient.LastName);
+            expected.NationalCode.Should().Be(patient.NationalCode);
 
         }
 
@@ -74,13 +79,12 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
         {
             int FakeId = 987;
             Patient patient = CreateApatient();
-            var updatedPatient = new PatientBuilder().WithFirstName("joje").CreatePatient();
-            _dataContext.Manipulate(_ => _.Patients.Add(updatedPatient));
+    
             UpdatePatientDto updatePatientDto = new UpdatePatientDto()
             {
-                FirstName = updatedPatient.FirstName,
-                LastName = updatedPatient.LastName,
-                NationalCode = updatedPatient.NationalCode,
+                FirstName = patient.FirstName,
+                LastName = "yaghoubi",
+                NationalCode = patient.NationalCode,
             };
 
             Action expected = () => _sut.Update(FakeId, updatePatientDto);

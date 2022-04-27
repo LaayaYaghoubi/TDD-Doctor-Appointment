@@ -34,7 +34,7 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
                 .CreateDataContext<ApplicationDbContext>();
             _repository = new EFAppointmentRepository(_dataContext);
             _unitOfWork = new EFUnitOfWork(_dataContext);
-            _sut = new AppointmentAppService(_repository,_unitOfWork);
+            _sut = new AppointmentAppService(_repository, _unitOfWork);
         }
 
 
@@ -45,14 +45,8 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Doctor doctor = CreateADoctor();
             Patient patient = CreateAPatient();
             Appointment appointment = SetAnAppointment(doctor, patient);
-            AddAppointmetDto addAppointmetDto = new AddAppointmetDto()
-            {
-                PatientId = appointment.PatientId,
-                DoctorId = appointment.DoctorId,
-                Date = appointment.Date,
-            };
 
-            _sut.Add(addAppointmetDto);
+            _sut.Add(appointment);
 
             var expected = _dataContext.Appointments.FirstOrDefault();
             expected.DoctorId.Should().Be(appointment.DoctorId);
@@ -60,7 +54,7 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             expected.Date.Should().Be(appointment.Date);
         }
 
-    
+
 
         [Fact]
         public void Add_throws_Exception_DoctorAppointmentsAreFullException_if_doctor_appointments_become_more_than_5_in_one_day()
@@ -68,41 +62,17 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Doctor doctor = CreateADoctor();
             List<Patient> patients = CreateSixPatients();
             List<Appointment> appointments = SetAppointmetForSixPatient(doctor, patients);
-        
 
-            _sut.Add(addAppointmetDto1);
-            _sut.Add(addAppointmetDto2);
-            _sut.Add(addAppointmetDto3);
-            _sut.Add(addAppointmetDto4);
-            _sut.Add(addAppointmetDto0);
-            Action expected = () => _sut.Add(addAppointmetDto5);
+            _sut.Add(appointments[0]);
+            _sut.Add(appointments[1]);
+            _sut.Add(appointments[2]);
+            _sut.Add(appointments[3]);
+            _sut.Add(appointments[4]);
+            Action expected = () => _sut.Add(appointments[5]);
 
             expected.Should().ThrowExactly<DoctorAppointmentsAreFullException>();
         }
 
-        private List<AddAppointmetDto> AddAppointmetDtos(List<Appointment> appointments)
-        {
-            List  <AddAppointmetDto> addAppointmetDtos = new List<AddAppointmetDto>();
-
-
-                 for (int i = 0; i < appointments.Count; i++)
-                 {
-                           new AddAppointmetDto
-                         {
-                            Date = appointments[i].Date,
-                            PatientId = appointments[i].PatientId,
-                             DoctorId = appointments[i].DoctorId,
-                         };
-                addAppointmetDtos.Add(new AddAppointmetDto);
-                 }
-                 return addAppointmetDtos;
-        }
-           
-        
-               
-           
-
-    }
 
 
         [Fact]
@@ -110,15 +80,14 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
         {
             Appointment appointment = SetAnAppointment();
             Appointment updatedAppointment = UpdateCreatedAppointment();
-            _dataContext.Appointments.Add(updatedAppointment);
-
+            
 
             _sut.Update(appointment.Id, updatedAppointment);
 
             var expected = _dataContext.Appointments.FirstOrDefault(_ => _.Id == updatedAppointment.Id);
-            expected.PatientId.Should().Be(updatedAppointment.PatientId);
-            expected.DoctorId.Should().Be(updatedAppointment.DoctorId);
-            expected.Date.Should().Be(updatedAppointment.Date);
+            expected.PatientId.Should().Be(appointment.PatientId);
+            expected.DoctorId.Should().Be(appointment.DoctorId);
+            expected.Date.Should().Be(appointment.Date);
         }
         [Fact]
         public void Update_throws_exception_ThereIsNoAppointmentWithThisIdException_when_appointmemt_does_not_exist()
@@ -128,7 +97,7 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Appointment updatedAppointment = UpdateCreatedAppointment();
             _dataContext.Appointments.Add(updatedAppointment);
 
-             Action expected =()=> _sut.Update(fakeId, updatedAppointment);
+            Action expected = () => _sut.Update(fakeId, updatedAppointment);
 
             expected.Should().ThrowExactly<ThereIsNoAppointmentWithThisIdException>();
         }
@@ -167,7 +136,7 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Appointment appointment = SetAnAppointment(doctor, patient);
             _dataContext.Manipulate(_ => _.Appointments.Add(appointment));
 
-            Action expected =()=> _sut.Delete(fakeId);
+            Action expected = () => _sut.Delete(fakeId);
 
             expected.Should().ThrowExactly<ThereIsNoAppointmentWithThisIdException>();
 
@@ -179,7 +148,7 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             List<Patient> patients = CreateFivePatients();
             List<Appointment> appointments = SetTheirAppointments(doctor, patients);
 
-           var expected = _sut.GetAll();
+            var expected = _sut.GetAll();
 
             expected.Should().HaveCount(5);
             expected.Should().Contain(_ => _.DoctorId == appointments[0].DoctorId);
