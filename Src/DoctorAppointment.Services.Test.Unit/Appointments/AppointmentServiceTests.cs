@@ -62,12 +62,12 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Doctor doctor = CreateADoctor();
             List<Patient> patients = CreateSixPatients();
             List<Appointment> appointments = SetAppointmetForSixPatient(doctor, patients);
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[0]));
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[1]));
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[2]));
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[3]));
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointments[4]));
 
-            _sut.Add(appointments[0]);
-            _sut.Add(appointments[1]);
-            _sut.Add(appointments[2]);
-            _sut.Add(appointments[3]);
-            _sut.Add(appointments[4]);
             Action expected = () => _sut.Add(appointments[5]);
 
             expected.Should().ThrowExactly<DoctorAppointmentsAreFullException>();
@@ -80,14 +80,14 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
         {
             Appointment appointment = SetAnAppointment();
             Appointment updatedAppointment = UpdateCreatedAppointment();
-            
+            _dataContext.Appointments.Add(updatedAppointment);
 
             _sut.Update(appointment.Id, updatedAppointment);
 
             var expected = _dataContext.Appointments.FirstOrDefault(_ => _.Id == updatedAppointment.Id);
-            expected.PatientId.Should().Be(appointment.PatientId);
-            expected.DoctorId.Should().Be(appointment.DoctorId);
-            expected.Date.Should().Be(appointment.Date);
+            expected.PatientId.Should().Be(updatedAppointment.PatientId);
+            expected.DoctorId.Should().Be(updatedAppointment.DoctorId);
+            expected.Date.Should().Be(updatedAppointment.Date);
         }
         [Fact]
         public void Update_throws_exception_ThereIsNoAppointmentWithThisIdException_when_appointmemt_does_not_exist()
