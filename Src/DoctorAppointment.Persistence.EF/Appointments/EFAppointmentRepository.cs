@@ -22,11 +22,21 @@ namespace DoctorAppointment.Persistence.EF.Appointments
             _dataContext.Appointments.Add(appointment);
         }
 
+        public void Delete(Appointment appointment)
+        {
+            _dataContext.Appointments.Remove(appointment);
+        }
+
         public int DoctorAppointmentCount(int doctorId, int day)
         {
            return _dataContext.Appointments.Count
                 (_ => _.DoctorId == doctorId && _.Date.Day == day);
 
+        }
+
+        public Appointment FindById(int id)
+        {
+            return _dataContext.Appointments.FirstOrDefault(_ => _.Id == id);
         }
 
         public Appointment IsAppointmentExist(int id)

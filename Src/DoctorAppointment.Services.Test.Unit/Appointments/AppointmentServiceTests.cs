@@ -115,6 +115,32 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
 
             expected.Should().ThrowExactly<DoctorAppointmentsAreFullException>();
         }
+        [Fact]
+        public void Delete_deletes_appointment_properly()
+        {
+            Doctor doctor = CreateADoctor();
+            Patient patient = CreateAPatient();
+            Appointment appointment = SetAnAppointment(doctor, patient);
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointment));
+
+            _sut.Delete(appointment.Id);
+
+            _dataContext.Appointments.Should().NotContain(appointment);
+        }
+        [Fact]
+        public void Delete_throws_ThereIsNoAppointmentWithThisIdException_when_appointment_does_not_exist_to_delete()
+        {
+            int fakeId = 590;
+            Doctor doctor = CreateADoctor();
+            Patient patient = CreateAPatient();
+            Appointment appointment = SetAnAppointment(doctor, patient);
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointment));
+
+            Action expected =()=> _sut.Delete(fakeId);
+
+            expected.Should().ThrowExactly<ThereIsNoAppointmentWithThisIdException>();
+
+        }
 
         private Appointment EditNewPatientAppointmentDateToFivePatientAppointmentDate(Doctor doctor, List<Appointment> appointments, Patient newPatient)
         {
