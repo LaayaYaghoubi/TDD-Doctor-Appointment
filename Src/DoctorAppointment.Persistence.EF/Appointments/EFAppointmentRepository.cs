@@ -55,6 +55,14 @@ namespace DoctorAppointment.Persistence.EF.Appointments
             return _dataContext.Appointments.FirstOrDefault(_ => _.Id == id);
         }
 
+        public bool IsappointmentRepeated(int doctorId, int day, int patientId)
+        {
+            return _dataContext.Appointments.Any(_ =>
+            _.DoctorId == doctorId &&
+            _.Date.Day == day &&
+            _.PatientId == patientId);
+        }
+
         public void Update(Appointment appointment)
         {
             _dataContext.Update(appointment);

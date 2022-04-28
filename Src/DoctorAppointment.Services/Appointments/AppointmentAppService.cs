@@ -25,6 +25,13 @@ namespace DoctorAppointment.Services.Appointments
         {
             int DoctorAppointmentCount = _repository.
                 DoctorAppointmentCount(appointment.DoctorId, appointment.Date.Day);
+            bool isappointmentRepeated = _repository.IsappointmentRepeated
+                (appointment.DoctorId, appointment.Date.Day, appointment.PatientId);
+
+            if (isappointmentRepeated)
+            {
+                throw new ThisAppointmentIsRepeatedException();
+            }
 
             if (DoctorAppointmentCount >= 5)
             {

@@ -64,6 +64,18 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             expected.Should().ThrowExactly<DoctorAppointmentsAreFullException>();
         }
 
+        [Fact]
+
+        public void Add_throws_Exception_ThisAppointmentIsRepeatedException_when_appointment_is_repeated()
+        {
+            AddAppointmentDto addAppointmentDto2 = SetTwoSameAppointments();
+
+            Action expected = () => _sut.Add(addAppointmentDto2);
+
+            expected.Should().ThrowExactly<ThisAppointmentIsRepeatedException>();
+        }
+
+       
 
         [Fact]
         public void Update_updates_an_appointment_properly()
@@ -356,6 +368,25 @@ namespace DoctorAppointment.Services.Test.Unit.Appointments
             Appointment appointment = SetAnAppointment(doctor, patient);
             _dataContext.Manipulate(_ => _.Appointments.Add(appointment));
             return appointment;
+        }
+
+        private AddAppointmentDto SetTwoSameAppointments()
+        {
+            AddAppointmentDto addAppointmentDto = CreateAnAppointment();
+            Appointment appointment = new Appointment()
+            {
+                DoctorId = addAppointmentDto.DoctorId,
+                PatientId = addAppointmentDto.PatientId,
+                Date = addAppointmentDto.Date,
+            };
+            _dataContext.Manipulate(_ => _.Appointments.Add(appointment));
+            AddAppointmentDto addAppointmentDto2 = new AddAppointmentDto()
+            {
+                DoctorId = addAppointmentDto.DoctorId,
+                PatientId = addAppointmentDto.PatientId,
+                Date = addAppointmentDto.Date,
+            };
+            return addAppointmentDto2;
         }
 
 

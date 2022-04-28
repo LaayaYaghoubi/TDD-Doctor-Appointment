@@ -37,14 +37,10 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
         [Fact]
         public void Add_adds_patient_properly()
         {
-            var patient = new PatientBuilder().CreatePatient();
-            AddPatientDto addPatientDto = new AddPatientDto()
-            {
-                FirstName = patient.FirstName,
-                LastName = patient.LastName,
-                NationalCode = patient.NationalCode,
-            };
-          
+            Patient patient;
+            AddPatientDto addPatientDto;
+            CreateAPatient(out patient, out addPatientDto);
+
             _sut.Add(addPatientDto);
 
             var expected = _dataContext.Patients.FirstOrDefault();
@@ -52,18 +48,15 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
             expected.LastName.Should().Be(patient.LastName);
             expected.NationalCode.Should().Be(patient.NationalCode);
 
-          }
-            [Fact]
+        }
+
+    
+
+        [Fact]
         public void Update_updates_patient_properly()
         {
             Patient patient = CreateApatient();
-          
-            UpdatePatientDto updatePatientDto = new UpdatePatientDto()
-            {
-                FirstName = "laaya",
-                LastName = patient.LastName,
-                NationalCode = patient.NationalCode,
-            };
+            UpdatePatientDto updatePatientDto = UpdateCreatedPatient(patient);
 
             _sut.Update(patient.Id, updatePatientDto);
 
@@ -74,19 +67,15 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
 
         }
 
+     
+
         [Fact]
         public void Update_throws_PatientWithThisIdDoesNotExistException_if_patient_doesnot_exist()
         {
             int FakeId = 987;
             Patient patient = CreateApatient();
-    
-            UpdatePatientDto updatePatientDto = new UpdatePatientDto()
-            {
-                FirstName = patient.FirstName,
-                LastName = "yaghoubi",
-                NationalCode = patient.NationalCode,
-            };
-
+            UpdatePatientDto updatePatientDto = new UpdatePatientDto();
+          
             Action expected = () => _sut.Update(FakeId, updatePatientDto);
 
             expected.Should().ThrowExactly<PatientWithThisIdDoesNotExistException>();
@@ -104,8 +93,7 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
         public void Delete_throws_PatientWithThisIdDoesNotExistException_if_patient_doesnot_exist()
         {
             int FakeId = 134;
-            Patient patient = CreateApatient();
-
+            
             Action expected = () => _sut.Delete(FakeId);
 
             expected.Should().ThrowExactly<PatientWithThisIdDoesNotExistException>();
@@ -140,6 +128,25 @@ namespace DoctorAppointment.Services.Test.Unit.Patients
             var patient = new PatientBuilder().CreatePatient();
             _dataContext.Manipulate(_ => _.Patients.Add(patient));
             return patient;
+        }
+        private static void CreateAPatient(out Patient patient, out AddPatientDto addPatientDto)
+        {
+            patient = new PatientBuilder().CreatePatient();
+            addPatientDto = new AddPatientDto()
+            {
+                FirstName = patient.FirstName,
+                LastName = patient.LastName,
+                NationalCode = patient.NationalCode,
+            };
+        }
+        private static UpdatePatientDto UpdateCreatedPatient(Patient patient)
+        {
+            return new UpdatePatientDto()
+            {
+                FirstName = "laaya",
+                LastName = patient.LastName,
+                NationalCode = patient.NationalCode,
+            };
         }
 
     }
